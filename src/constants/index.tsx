@@ -1,8 +1,7 @@
 export const ROUTE_KEYS = Object.freeze({
-  DASHBOARD: 'Dashboard',
+  HOME: 'Home',
   LOGIN: 'Login',
-  CHANNELS: 'Channels',
-  COSTS: 'Costs',
+  FRIENDS: 'Friends',
   NOTIFICATION: 'Notification',
   PERSONAL: 'Personal',
   LIST: 'List' //TODO CLEAR
@@ -17,5 +16,5 @@ export const PATH = {
 };
 
 export const DEFAULT_HEIGHT = {
-  TAB_BAR: 80
+  TAB_BAR: 50
 };

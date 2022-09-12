@@ -1,18 +1,18 @@
-import React, { Fragment, useEffect, useRef } from 'react';
-import { BottomTabBarButtonProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as Animatable from 'react-native-animatable';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { DefaultTheme, NavigationContainer, Theme } from '@react-navigation/native';
-import { useStore } from '../store';
-import { getItem } from '../device-info';
-import { StyleSheet, Pressable } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { Fragment, useEffect, useRef } from 'react';
+import { StyleSheet } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 import { DEFAULT_HEIGHT, ROUTE_KEYS } from '../constants';
-import { TYPOGRAPHY_STYLES } from '../styles/typography';
-import { DiscoverIconSvg, HomeIconSvg, PersonSvg, StatisticIconSvg } from '../svg-view';
-import { HomeScreen } from '../screens/home';
+import { getItem } from '../device-info';
 import { FriendsScreen } from '../screens/friends';
+import { HomeScreen } from '../screens/home';
 import { NotificationScreen } from '../screens/notification';
 import { ProfileScreen } from '../screens/profile';
+import { useStore } from '../store';
+import { TYPOGRAPHY_STYLES } from '../styles/typography';
+import { DiscoverIconSvg, HomeIconSvg, PersonSvg, StatisticIconSvg } from '../svg-view';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -42,49 +42,42 @@ export const AppRouting = () => {
 };
 
 const AuthorizedRoutes = () => {
-  const CustomTabButton = (props: BottomTabBarButtonProps) => (
-    <Pressable {...props} style={props.accessibilityState?.selected ? [props.style, styles.indicatorStyle] : props.style} />
-  );
-
   return (
     <Tab.Navigator
       defaultScreenOptions={{ headerTransparent: true }}
-      initialRouteName={ROUTE_KEYS.DASHBOARD}
+      initialRouteName={ROUTE_KEYS.HOME}
       screenOptions={({ route }) => ({
         ...EmptyHeader,
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: true,
         tabBarLabelStyle: { ...TYPOGRAPHY_STYLES.Subhead2, fontSize: 11 },
-        tabBarActiveTintColor: 'black',
-        tabBarStyle: { height: DEFAULT_HEIGHT.TAB_BAR, paddingBottom: 15, borderTopColor: '#8dabf7' },
+        tabBarActiveTintColor: 'white',
+        tabBarStyle: { height: DEFAULT_HEIGHT.TAB_BAR, borderTopColor: '#8dabf7', backgroundColor: 'black' },
         tabBarButton: TabBarButton.includes(route.name) ? undefined : () => null
       })}
     >
       <Tab.Screen
-        name={ROUTE_KEYS.DASHBOARD}
+        name={ROUTE_KEYS.HOME}
         component={HomeScreen}
         options={{
           tabBarLabel: 'Home',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={HomeIconSvg} />,
-          tabBarButton: CustomTabButton
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={HomeIconSvg} />
         }}
       />
       <Tab.Screen
-        name={ROUTE_KEYS.CHANNELS}
+        name={ROUTE_KEYS.FRIENDS}
         component={FriendsScreen}
         options={{
           tabBarLabel: 'Friends',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={DiscoverIconSvg} />,
-          tabBarButton: CustomTabButton
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={DiscoverIconSvg} />
         }}
       />
       <Tab.Screen
-        name={ROUTE_KEYS.COSTS}
+        name={ROUTE_KEYS.NOTIFICATION}
         component={NotificationScreen}
         options={{
           tabBarLabel: 'Inbox',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={StatisticIconSvg} />,
-          tabBarButton: CustomTabButton
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={StatisticIconSvg} />
         }}
       />
       <Tab.Screen
@@ -92,8 +85,7 @@ const AuthorizedRoutes = () => {
         component={ProfileScreen}
         options={{
           tabBarLabel: 'Profile',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={PersonSvg} />,
-          tabBarButton: CustomTabButton
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={PersonSvg} />
         }}
       />
     </Tab.Navigator>
@@ -110,15 +102,14 @@ const TabBarIcon = (props: any) => {
 
   return (
     <Animatable.View ref={tabRef} style={styles.tabIcon}>
-      <Item color={focused ? 'black' : '#4A4A4A'} fill={focused ? 'rgba(92, 136, 209, 0.33)' : 'none'} />
+      <Item color={focused ? 'white' : '#4A4A4A'} />
     </Animatable.View>
   );
 };
 
 const EmptyHeader = { header: () => <Fragment /> };
-const TabBarButton = [ROUTE_KEYS.CHANNELS, ROUTE_KEYS.COSTS, ROUTE_KEYS.DASHBOARD, ROUTE_KEYS.PERSONAL];
+const TabBarButton = [ROUTE_KEYS.HOME, ROUTE_KEYS.FRIENDS, ROUTE_KEYS.NOTIFICATION, ROUTE_KEYS.PERSONAL];
 
 const styles = StyleSheet.create({
-  tabIcon: { justifyContent: 'center', alignItems: 'center', marginBottom: -15 },
-  indicatorStyle: { borderTopWidth: 2, borderTopColor: '#4676F2' }
+  tabIcon: {}
 });

@@ -1,0 +1,9 @@
+{
+  "cSpell.words": ["passcode", "Readex", "signin", "signup"],
+  "editor.detectIndentation": false,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
+}
