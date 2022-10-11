@@ -2,8 +2,9 @@
 
 buildscript {
     ext {
+         ext.kotlin_version = '1.6.20'
         buildToolsVersion = "31.0.0"
-        minSdkVersion = 21
+        minSdkVersion = 23
         compileSdkVersion = 31
         targetSdkVersion = 31
 
@@ -20,9 +21,11 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath('com.android.tools.build:gradle:7.3.0')
+        classpath("com.android.tools.build:gradle:7.1.1")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("de.undercouch:gradle-download-task:5.0.1")
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -45,6 +48,24 @@ allprojects {
                 excludeGroup "com.facebook.react"
             }
         }
+
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Banuba/banuba-ve-sdk")
+            credentials {
+                username = "Banuba"
+                password = "\u0038\u0036\u0032\u0037\u0063\u0035\u0031\u0030\u0033\u0034\u0032\u0063\u0061\u0033\u0065\u0061\u0031\u0032\u0034\u0064\u0065\u0066\u0039\u0062\u0034\u0030\u0063\u0063\u0037\u0039\u0038\u0063\u0038\u0038\u0066\u0034\u0031\u0032\u0061\u0038"
+            }
+        }
+        maven {
+            name = "ARCloudPackages"
+            url = uri("https://github.com/Banuba/banuba-ar")
+            credentials {
+                username = "Banuba"
+                password = "\u0038\u0036\u0032\u0037\u0063\u0035\u0031\u0030\u0033\u0034\u0032\u0063\u0061\u0033\u0065\u0061\u0031\u0032\u0034\u0064\u0065\u0066\u0039\u0062\u0034\u0030\u0063\u0063\u0037\u0039\u0038\u0063\u0038\u0038\u0066\u0034\u0031\u0032\u0061\u0038"
+            }
+        }
+
         google()
         maven { url 'https://www.jitpack.io' }
         jcenter() {
