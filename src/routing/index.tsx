@@ -8,8 +8,8 @@ import { DEFAULT_HEIGHT, ROUTE_KEYS } from '../constants';
 import { getItem } from '../device-info';
 import { FriendsScreen } from '../screens/friends';
 import { HomeScreen } from '../screens/home';
-import { NotificationScreen } from '../screens/notification';
 import { ProfileScreen } from '../screens/profile';
+import { UploadScreen } from '../screens/upload';
 import { useStore } from '../store';
 import { TYPOGRAPHY_STYLES } from '../styles/typography';
 import { DiscoverIconSvg, HomeIconSvg, InboxIconSvg, PersonSvg, RecordVideo } from '../svg-view';
@@ -54,7 +54,7 @@ const Recording = () => {
   return null;
 };
 
-const AuthorizedRoutes = () => {
+const NativeStackNavigator = () => {
   return (
     <Tab.Navigator
       defaultScreenOptions={{ headerTransparent: true }}
@@ -88,16 +88,14 @@ const AuthorizedRoutes = () => {
       <Tab.Screen
         name={ROUTE_KEYS.RECORD_VIDEO}
         component={Recording}
-        options={{
+        options={({ navigation }) => ({
           tabBarButton: () => (
             <TouchableOpacity
               style={{ marginTop: 5 }}
               onPress={async () => {
                 if (Platform.OS === 'android') {
                   startAndroidVideoEditor()
-                    .then((videoUri) => {
-                      console.log('Banuba Android Video Editor export video completed successfully. Video uri = ' + videoUri);
-                    })
+                    .then((videoUri) => navigation.navigate('Upload', { uri: videoUri }))
                     .catch((e) => {
                       console.log('Banuba Android Video Editor export video failed = ' + e);
                     });
@@ -116,11 +114,11 @@ const AuthorizedRoutes = () => {
               <RecordVideo />
             </TouchableOpacity>
           )
-        }}
+        })}
       />
       <Tab.Screen
         name={ROUTE_KEYS.NOTIFICATION}
-        component={NotificationScreen}
+        component={UploadScreen}
         options={{
           tabBarLabel: 'Inbox',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={InboxIconSvg} />
@@ -135,6 +133,15 @@ const AuthorizedRoutes = () => {
         }}
       />
     </Tab.Navigator>
+  );
+};
+
+const AuthorizedRoutes = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name={'NativeStack'} component={NativeStackNavigator} />
+      <Stack.Screen name={ROUTE_KEYS.UPLOAD} component={UploadScreen} />
+    </Stack.Navigator>
   );
 };
 

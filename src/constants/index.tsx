@@ -5,7 +5,8 @@ export const ROUTE_KEYS = Object.freeze({
   NOTIFICATION: 'Notification',
   PERSONAL: 'Personal',
   LIST: 'List',
-  RECORD_VIDEO: 'record'
+  RECORD_VIDEO: 'record',
+  UPLOAD: 'Upload'
 });
 
 export const PATH = {

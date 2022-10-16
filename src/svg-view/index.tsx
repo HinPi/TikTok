@@ -1,5 +1,5 @@
 import Svg, { Path, Rect, SvgProps } from 'react-native-svg';
-import { BLACK_50, BLACK_70 } from '../styles/color';
+import { BLACK_100, BLACK_50, BLACK_70 } from '../styles/color';
 
 export const HomeIconSvg = ({ width = 24, height = 21, color = BLACK_70, fill = 'none', ...props }: SvgProps): JSX.Element => {
   return (
@@ -82,6 +82,17 @@ export const RecordVideo = ({ width = 44, height = 29, color = BLACK_50, fill = 
       <Path
         d="M21.25 8.25C20.9739 8.25 20.75 8.47386 20.75 8.75V13.5H16C15.7239 13.5 15.5 13.7239 15.5 14V15.5C15.5 15.7761 15.7239 16 16 16H20.75V20.75C20.75 21.0261 20.9739 21.25 21.25 21.25H22.75C23.0261 21.25 23.25 21.0261 23.25 20.75V16H28C28.2761 16 28.5 15.7761 28.5 15.5V14C28.5 13.7239 28.2761 13.5 28 13.5H23.25V8.75C23.25 8.47386 23.0261 8.25 22.75 8.25H21.25Z"
         fill="#161722"
+      />
+    </Svg>
+  );
+};
+
+export const ArrowBackSvg = ({ color = BLACK_100, width = 30, height = 20, ...props }: SvgProps): JSX.Element => {
+  return (
+    <Svg height={height} width={width} viewBox="0 0 16 16" fill="none" {...props}>
+      <Path
+        d="M15.0005 7.0007H3.83047L8.71047 2.1207C9.10047 1.7307 9.10047 1.0907 8.71047 0.700703C8.32047 0.310703 7.69047 0.310703 7.30047 0.700703L0.710469 7.2907C0.320469 7.6807 0.320469 8.3107 0.710469 8.7007L7.30047 15.2907C7.69047 15.6807 8.32047 15.6807 8.71047 15.2907C9.10047 14.9007 9.10047 14.2707 8.71047 13.8807L3.83047 9.0007H15.0005C15.5505 9.0007 16.0005 8.5507 16.0005 8.0007C16.0005 7.4507 15.5505 7.0007 15.0005 7.0007Z"
+        fill={color}
       />
     </Svg>
   );
