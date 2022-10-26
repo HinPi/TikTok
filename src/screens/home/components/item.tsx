@@ -1,15 +1,57 @@
-import React, { useState } from 'react';
-import { Image, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetTextInput, BottomSheetVirtualizedList } from '@gorhom/bottom-sheet';
+import { Portal } from '@gorhom/portal';
+import { useNavigation } from '@react-navigation/native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Image, Keyboard, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Video from 'react-native-video';
+import { TextField } from '../../../components/text-field';
 import { WINDOW_HEIGHT } from '../../../device-info';
+import { DARK_RED } from '../../../styles/color';
 
 export const Item = ({ data, isActive }: any): JSX.Element => {
+  const navigation = useNavigation();
   const { uri } = data;
+  const ref = useRef<any>();
   const [paused, setPaused] = useState<boolean>(false);
+  const sheetRef = useRef<BottomSheet>(null);
+  const datas = useMemo(
+    () =>
+      Array(50)
+        .fill(0)
+        .map((_, index) => `index-${index}`),
+    []
+  );
+  const snapPoints = useMemo(() => ['65%'], []);
+
+  // render
+  const renderItem = useCallback(
+    ({ item }: { item: string }) => (
+      <View style={styles.itemContainer}>
+        <TextField label={item} />
+      </View>
+    ),
+    []
+  );
+
+  useEffect(() => {
+    const blur = navigation.addListener('blur', () => {
+      ref.current.setNativeProps({ paused: true });
+    });
+
+    const focus = navigation.addListener('focus', () => {
+      ref.current.setNativeProps({ paused: false });
+    });
+
+    return () => {
+      navigation.removeListener('blur', blur);
+      navigation.removeListener('focus', focus);
+    };
+  }, [navigation]);
+
   const handlePausePlay = () => {
     setPaused(!paused);
   };
@@ -22,6 +64,7 @@ export const Item = ({ data, isActive }: any): JSX.Element => {
             source={{
               uri: uri
             }}
+            ref={ref}
             style={styles.video}
             resizeMode={'cover'}
             onError={(error) => console.log(error)}
@@ -36,7 +79,7 @@ export const Item = ({ data, isActive }: any): JSX.Element => {
               <Image
                 style={styles.profilePicuter}
                 source={{
-                  uri: 'https://scontent.fsgn5-13.fna.fbcdn.net/v/t39.30808-6/271944201_3152722211664631_8159158506795822795_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=WRKP_ayqoGcAX8GrkGx&tn=1WNY2JBTpyyy_dJG&_nc_ht=scontent.fsgn5-13.fna&oh=00_AT9qDI5j7-N3qNpLsShjUzAAafTOxO9TnBOY5_90mrpiGQ&oe=6324FCF4'
+                  uri: 'https://scontent.fdad3-5.fna.fbcdn.net/v/t39.30808-6/271944201_3152722211664631_8159158506795822795_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=lFCoUOK4UmcAX_31mCj&_nc_ht=scontent.fdad3-5.fna&oh=00_AT_NBorIAuvUEI6BgABrQq5HFZ_xHkvHo6SIZQXyXNwN0Q&oe=635E5634'
                 }}
               />
             </View>
@@ -45,13 +88,54 @@ export const Item = ({ data, isActive }: any): JSX.Element => {
               <Text style={styles.statsLabel}>10</Text>
             </View>
             <View style={styles.iconContainer}>
-              <FontAwesome name={'commenting-o'} size={35} />
+              <TouchableOpacity onPress={() => sheetRef.current?.collapse()}>
+                <FontAwesome name={'commenting-o'} size={35} />
+              </TouchableOpacity>
               <Text style={styles.statsLabel}>10</Text>
+              <Portal>
+                <BottomSheet
+                  keyboardBehavior="extend"
+                  keyboardBlurBehavior="restore"
+                  ref={sheetRef}
+                  snapPoints={snapPoints}
+                  enablePanDownToClose
+                  index={-1}
+                  backdropComponent={(props) => (
+                    <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} onPress={Keyboard.dismiss} />
+                  )}
+                >
+                  <BottomSheetVirtualizedList
+                    data={datas}
+                    keyExtractor={(i) => i}
+                    getItemCount={(data) => data.length}
+                    getItem={(data, index) => data[index]}
+                    renderItem={renderItem}
+                    contentContainerStyle={styles.contentContainer}
+                  />
+                  <View style={styles.containerComment}>
+                    <Image
+                      style={styles.imgComment}
+                      source={{
+                        uri: 'https://scontent.fdad3-5.fna.fbcdn.net/v/t39.30808-6/271944201_3152722211664631_8159158506795822795_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=lFCoUOK4UmcAX_31mCj&_nc_ht=scontent.fdad3-5.fna&oh=00_AT_NBorIAuvUEI6BgABrQq5HFZ_xHkvHo6SIZQXyXNwN0Q&oe=635E5634'
+                      }}
+                    />
+                    <BottomSheetTextInput
+                      style={styles.textInput}
+                      selectionColor={DARK_RED}
+                      placeholder={'Add comment...'}
+                      placeholderTextColor={'#a8a8ac'}
+                    />
+                  </View>
+                </BottomSheet>
+              </Portal>
             </View>
-            <View style={styles.iconContainer}>
-              <Fontisto name={'share-a'} size={35} />
-              <Text style={styles.statsLabel}>10</Text>
-            </View>
+
+            <TouchableOpacity onPress={() => console.log('first')}>
+              <View style={styles.iconContainer}>
+                <Fontisto name={'share-a'} size={35} />
+                <Text style={styles.statsLabel}>10</Text>
+              </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.bottomContainer}>
             <View>
@@ -131,5 +215,25 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     marginTop: 5
+  },
+  itemContainer: {
+    padding: 6,
+    margin: 6,
+    backgroundColor: '#eee'
+  },
+  contentContainer: {
+    backgroundColor: 'white'
+  },
+  containerComment: { flexDirection: 'row', height: 60, borderTopWidth: 0.5, paddingTop: 5, borderTopColor: '#dcdcde' },
+  imgComment: { width: 40, height: 40, borderRadius: 25, borderWidth: 2, borderColor: '#fff', marginLeft: 5 },
+  textInput: {
+    backgroundColor: '#f1f1f2',
+    height: 40,
+    marginBottom: 15,
+    marginHorizontal: 10,
+    color: 'black',
+    borderRadius: 5,
+    flex: 1,
+    paddingLeft: 10
   }
 });

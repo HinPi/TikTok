@@ -38,6 +38,7 @@ export const HomeScreen = (): JSX.Element => {
       snapToInterval={WINDOW_HEIGHT - 48}
       snapToAlignment={'end'}
       decelerationRate={'fast'}
+      disableIntervalMomentum
     />
   );
 };
