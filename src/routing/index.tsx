@@ -8,6 +8,7 @@ import { DEFAULT_HEIGHT, ROUTE_KEYS } from '../constants';
 import { getItem } from '../device-info';
 import { FriendsScreen } from '../screens/friends';
 import { HomeScreen } from '../screens/home';
+import { NotificationScreen } from '../screens/notification';
 import { ProfileScreen } from '../screens/profile';
 import { UploadScreen } from '../screens/upload';
 import { useStore } from '../store';
@@ -118,7 +119,7 @@ const NativeStackNavigator = () => {
       />
       <Tab.Screen
         name={ROUTE_KEYS.NOTIFICATION}
-        component={UploadScreen}
+        component={NotificationScreen}
         options={{
           tabBarLabel: 'Inbox',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={InboxIconSvg} />
@@ -138,8 +139,8 @@ const NativeStackNavigator = () => {
 
 const AuthorizedRoutes = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name={'NativeStack'} component={NativeStackNavigator} />
+    <Stack.Navigator>
+      <Stack.Screen name={'NativeStack'} component={NativeStackNavigator} options={{ headerShown: false }} />
       <Stack.Screen name={ROUTE_KEYS.UPLOAD} component={UploadScreen} />
     </Stack.Navigator>
   );

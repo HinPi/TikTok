@@ -14,8 +14,10 @@ export const PATH = {
   CHANNEL: '/channel',
   COST: '/cost',
   LOGIN: '/login',
-  CHANGEPASSWORD: '/change-password'
+  VIDEO: '/video'
 };
+
+export const DATE_FORMATS = { dddd_DD_MM_YYYY: 'dddd.DD-MM-YYYY', DD_MM_YYYY: 'YYYY-MM-DD' + 'T' + 'HH:mm:ss', HH_mm: 'HH:mm' };
 
 export const DEFAULT_HEIGHT = {
   TAB_BAR: 50
