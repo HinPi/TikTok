@@ -1,44 +1,84 @@
-import React, { useState } from 'react';
-import { FlatList } from 'react-native';
-import { DEFAULT_HEIGHT } from '../../constants';
-import { WINDOW_HEIGHT } from '../../device-info';
-import { Item } from './components/item';
-
-const data = [
-  {
-    id: 1,
-    uri: 'https://d8vywknz0hvjw.cloudfront.net/fitenium-media-prod/videos/45fee890-a74f-11ea-8725-311975ea9616/proccessed_720.mp4'
-  },
-  {
-    id: 2,
-    uri: 'https://d8vywknz0hvjw.cloudfront.net/fitenium-media-prod/videos/45fee890-a74f-11ea-8725-311975ea9616/proccessed_720.mp4'
-  },
-  {
-    id: 3,
-    uri: 'https://d8vywknz0hvjw.cloudfront.net/fitenium-media-prod/videos/45fee890-a74f-11ea-8725-311975ea9616/proccessed_720.mp4'
-  },
-  {
-    id: 4,
-    uri: 'https://d8vywknz0hvjw.cloudfront.net/fitenium-media-prod/videos/45fee890-a74f-11ea-8725-311975ea9616/proccessed_720.mp4'
-  }
-];
+import { WINDOW_WIDTH } from '@gorhom/bottom-sheet';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React, { useCallback, useEffect, useState } from 'react';
+import { BackHandler, StyleSheet, ToastAndroid } from 'react-native';
+import { Route, TabBar, TabView } from 'react-native-tab-view';
+import { TextField } from '../../components/text-field';
+import { WHITE } from '../../styles/color';
+import { TYPOGRAPHY_STYLES } from '../../styles/typography';
+import { FollowingScreen } from './components/FollowingTab';
+import { ForYouScreen } from './components/ForYouTab';
 
 export const HomeScreen = (): JSX.Element => {
-  const [activeVideoIndex, setActiveVideoIndex] = useState(0);
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+  const [backPressCount, setBackPressCount] = useState(0);
+  const [index, setIndex] = useState(1);
+  const [routes] = useState([
+    { key: 'first', title: 'Following' },
+    { key: 'second', title: 'For you' }
+  ]);
+
+  const handleBackPress = useCallback(() => {
+    if (backPressCount === 0) {
+      setBackPressCount((prevCount) => prevCount + 1);
+      setTimeout(() => setBackPressCount(0), 2000);
+      ToastAndroid.show('Press one more time to exit', ToastAndroid.SHORT);
+    } else if (backPressCount === 1) {
+      BackHandler.exitApp();
+    }
+    return true;
+  }, [backPressCount]);
+
+  useEffect(() => {
+    // navigation.addListener('beforeRemove', (e) => {
+    //     e.preventDefault()
+
+    // })
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    return () => backHandler.remove();
+  }, [handleBackPress]);
+
+  const renderScene = ({ route }: { route: Route }) => {
+    switch (route.key) {
+      case 'second':
+        return <ForYouScreen />;
+      case 'first':
+        return <FollowingScreen />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <FlatList
-      data={data}
-      pagingEnabled
-      renderItem={({ item, index }) => <Item data={item} isActive={activeVideoIndex === index} />}
-      onScroll={(e) => {
-        const index = Math.round(e.nativeEvent.contentOffset.y / (WINDOW_HEIGHT - DEFAULT_HEIGHT.TAB_BAR));
-        setActiveVideoIndex(index);
-      }}
-      showsVerticalScrollIndicator={false}
-      snapToInterval={WINDOW_HEIGHT - 48}
-      snapToAlignment={'end'}
-      decelerationRate={'fast'}
-      disableIntervalMomentum
+    <TabView
+      navigationState={{ index, routes }}
+      renderScene={renderScene}
+      onIndexChange={setIndex}
+      initialLayout={{ width: WINDOW_WIDTH }}
+      renderTabBar={(props) => (
+        <TabBar
+          {...props}
+          renderLabel={({ route, focused }) => (
+            <TextField label={route?.title} style={[styles.fontStyle, focused ? { color: WHITE } : null]} />
+          )}
+          indicatorStyle={styles.indicatorStyle}
+          style={styles.backgroundTabBar}
+        />
+      )}
     />
   );
 };
+
+const styles = StyleSheet.create({
+  indicatorStyle: { backgroundColor: WHITE, width: 30, height: 2.5, left: (WINDOW_WIDTH / 2 - 30) / 2 },
+  backgroundTabBar: {
+    backgroundColor: 'transparent',
+    position: 'absolute',
+    top: 10,
+    left: 0,
+    right: 0,
+    elevation: 0
+  },
+  fontStyle: { ...TYPOGRAPHY_STYLES.Body1, fontWeight: 'bold' }
+});

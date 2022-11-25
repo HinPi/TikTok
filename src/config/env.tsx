@@ -1,7 +1,7 @@
-import { devApiUrl, devUri, prodApiUrl, staginApiUrl } from '@env';
+import { devApiUrl, devVideoUri, prodApiUrl, staginApiUrl } from '@env';
 const devEnv = {
   devApiUrl,
-  devUri
+  devVideoUri
 };
 
 const stagin = {

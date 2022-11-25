@@ -4,5 +4,7 @@ declare module '@env' {
   export const devApiUrl: string;
   export const staginApiUrl: string;
   export const prodApiUrl: string;
-  export const devUri: string;
+  export const devVideoUri: string;
+  export const devImageUri: string;
+  export const devGifUri: string;
 }

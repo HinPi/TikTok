@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { DefaultTheme, NavigationContainer, Theme } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
 import React, { Fragment, useEffect, useRef } from 'react';
 import { NativeModules, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable';
@@ -9,14 +9,16 @@ import { getItem } from '../device-info';
 import { FriendsScreen } from '../screens/friends';
 import { HomeScreen } from '../screens/home';
 import { NotificationScreen } from '../screens/notification';
+import { OtherProfile } from '../screens/other-profile';
 import { ProfileScreen } from '../screens/profile';
+import { SettingScreen } from '../screens/setting-privacy';
 import { UploadScreen } from '../screens/upload';
 import { useStore } from '../store';
 import { TYPOGRAPHY_STYLES } from '../styles/typography';
 import { DiscoverIconSvg, HomeIconSvg, InboxIconSvg, PersonSvg, RecordVideo } from '../svg-view';
 const { VideoEditorModule } = NativeModules;
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 async function startIosVideoEditor() {
@@ -65,26 +67,30 @@ const NativeStackNavigator = () => {
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: true,
         tabBarLabelStyle: { ...TYPOGRAPHY_STYLES.Subhead2, fontSize: 10, marginBottom: 3 },
-        tabBarActiveTintColor: 'white',
-        tabBarStyle: { height: DEFAULT_HEIGHT.TAB_BAR, borderTopColor: '#8dabf7', backgroundColor: 'black' },
+        tabBarActiveTintColor: route.name === 'Home' || route.name === 'Friends' ? 'white' : 'black',
+        tabBarStyle: {
+          height: DEFAULT_HEIGHT.TAB_BAR,
+          borderTopColor: '#8dabf7',
+          backgroundColor: route.name === 'Home' || route.name === 'Friends' ? 'black' : 'white'
+        },
         tabBarButton: TabBarButton.includes(route.name) ? undefined : () => null
       })}
     >
       <Tab.Screen
         name={ROUTE_KEYS.HOME}
         component={HomeScreen}
-        options={{
+        options={({ route }) => ({
           tabBarLabel: 'Home',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={HomeIconSvg} />
-        }}
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={HomeIconSvg} route={route.name} />
+        })}
       />
       <Tab.Screen
         name={ROUTE_KEYS.FRIENDS}
         component={FriendsScreen}
-        options={{
+        options={({ route }) => ({
           tabBarLabel: 'Friends',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={DiscoverIconSvg} />
-        }}
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={DiscoverIconSvg} route={route.name} />
+        })}
       />
       <Tab.Screen
         name={ROUTE_KEYS.RECORD_VIDEO}
@@ -120,18 +126,18 @@ const NativeStackNavigator = () => {
       <Tab.Screen
         name={ROUTE_KEYS.NOTIFICATION}
         component={NotificationScreen}
-        options={{
+        options={({ route }) => ({
           tabBarLabel: 'Inbox',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={InboxIconSvg} />
-        }}
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={InboxIconSvg} route={route.name} />
+        })}
       />
       <Tab.Screen
         name={ROUTE_KEYS.PERSONAL}
         component={ProfileScreen}
-        options={{
+        options={({ route }) => ({
           tabBarLabel: 'Profile',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={PersonSvg} />
-        }}
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={PersonSvg} route={route.name} />
+        })}
       />
     </Tab.Navigator>
   );
@@ -142,12 +148,22 @@ const AuthorizedRoutes = () => {
     <Stack.Navigator>
       <Stack.Screen name={'NativeStack'} component={NativeStackNavigator} options={{ headerShown: false }} />
       <Stack.Screen name={ROUTE_KEYS.UPLOAD} component={UploadScreen} />
+      <Stack.Screen
+        name={ROUTE_KEYS.OTHER_PROFILE}
+        component={OtherProfile}
+        options={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}
+      />
+      <Stack.Screen
+        name={ROUTE_KEYS.SETTING}
+        component={SettingScreen}
+        options={{ title: 'Settings and privacy', headerTitleAlign: 'center' }}
+      />
     </Stack.Navigator>
   );
 };
 
 const TabBarIcon = (props: any) => {
-  const { focused, Item } = props;
+  const { focused, Item, route } = props;
   const tabRef = useRef<any>(null);
 
   useEffect(() => {
@@ -156,7 +172,10 @@ const TabBarIcon = (props: any) => {
 
   return (
     <Animatable.View ref={tabRef} style={styles.tabIcon}>
-      <Item color={focused ? 'white' : '#4A4A4A'} />
+      <Item
+        fill={(route == 'Home' || route == 'Friends') && focused ? 'white' : 'none'}
+        color={(route == 'Home' || route == 'Friends') && focused ? 'white' : '#4A4A4A'}
+      />
     </Animatable.View>
   );
 };
