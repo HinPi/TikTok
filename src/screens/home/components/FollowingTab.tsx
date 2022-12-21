@@ -6,6 +6,7 @@ import { Item } from './item';
 
 export const FollowingScreen = memo((): JSX.Element => {
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
+
   return (
     <FlatList
       style={{ flex: 1 }}

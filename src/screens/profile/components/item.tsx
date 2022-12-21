@@ -10,20 +10,17 @@ import { WINDOW_HEIGHT, WINDOW_WIDTH } from '../../../device-info';
 import { useStore } from '../../../store';
 import { WHITE } from '../../../styles/color';
 import { CommentSvg, HeartSvg, MusicSvg, PauseSvg, ShareSvg } from '../../../svg-view';
-import { LoginModal } from '../../login';
-import { ModalComment } from './comment';
+import { ModalComment } from '../../home/components/comment';
 
-export const Item = memo(({ data, isActive }: any): JSX.Element => {
+export const FlatListItem = memo(({ data, isActive, isLike: liked }: any): JSX.Element => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const { videoUrl, author, likeCount, commentCount, _id, desc } = data;
+  const { videoUrl, author, likeCount, commentCount, _id } = data;
   const http = author.avatarLarger.split(':')[0];
   const sheetRef = useRef<BottomSheet>(null);
-  const sheetRefLogin = useRef<BottomSheet>(null);
-  const ref = useRef<any>();
   const [paused, setPaused] = useState<boolean>(false);
-  const [isLike, setIsLike] = useState<boolean>(false);
+  const [isLike, setIsLike] = useState<boolean>(liked);
   const [like, setLike] = useState<number>(Number(likeCount));
-  const { postData, isLogged } = useStore();
+  const { postData } = useStore();
   const { token } = useStore((store) => store.credentials || {});
 
   useEffect(() => {
@@ -54,11 +51,9 @@ export const Item = memo(({ data, isActive }: any): JSX.Element => {
   };
 
   const handleLike = () => {
-    isLogged === true
-      ? (postData(token, `${PATH.VIDEO}/${_id}/like`),
-        isActive && setIsLike(!isLike),
-        isActive && isLike ? setLike((prev) => prev - 1) : setLike((prev) => prev + 1))
-      : sheetRefLogin.current?.collapse();
+    postData(token, `${PATH.VIDEO}/${_id}/like`);
+    isActive && setIsLike(!isLike);
+    isActive && isLike ? setLike((prev) => prev - 1) : setLike((prev) => prev + 1);
   };
 
   return (
@@ -69,15 +64,11 @@ export const Item = memo(({ data, isActive }: any): JSX.Element => {
             source={{
               uri: devVideoUri + videoUrl
             }}
-            ref={ref}
+            disableFocus
             style={styles.video}
             resizeMode={'cover'}
             repeat={true}
             paused={!isActive || paused}
-            selectedVideoTrack={{
-              type: 'resolution',
-              value: isActive ? 1080 : 144
-            }}
           />
         </TouchableWithoutFeedback>
         {paused && (
@@ -109,7 +100,6 @@ export const Item = memo(({ data, isActive }: any): JSX.Element => {
               </TouchableOpacity>
               <Text style={styles.statsLabel}>{commentCount}</Text>
               {isActive ? <ModalComment ref={sheetRef} id={_id} /> : null}
-              <LoginModal ref={sheetRefLogin} />
             </View>
             <TouchableOpacity>
               <View style={styles.iconContainer}>
@@ -121,7 +111,7 @@ export const Item = memo(({ data, isActive }: any): JSX.Element => {
           <View style={styles.bottomContainer}>
             <View>
               <Text style={styles.handle}>{author.nickName}</Text>
-              {desc ? <Text style={styles.description}>{desc || ''}</Text> : null}
+              <Text style={styles.description}>Ghi vô</Text>
               <View style={styles.songRow}>
                 <MusicSvg />
                 <Text numberOfLines={1} style={styles.songName}>

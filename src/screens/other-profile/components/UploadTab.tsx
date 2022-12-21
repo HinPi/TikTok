@@ -3,12 +3,14 @@ import { WINDOW_WIDTH } from '@gorhom/bottom-sheet';
 import React, { memo } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { TextField } from '../../../components/text-field';
 import { PATH } from '../../../constants';
 import { useFetch } from '../../../handle-api';
+import { TYPOGRAPHY_STYLES } from '../../../styles/typography';
 
 export const PostedTab = memo((props: any): JSX.Element => {
-  const { id } = props;
-  const { response, loading } = useFetch(`${PATH.PROFILE}/${id}`);
+  const { id, name } = props;
+  const { response, loading } = useFetch(`${PATH.VIDEO}/${id}`);
 
   const renderItem = (props: any) => {
     const { item } = props;
@@ -20,6 +22,21 @@ export const PostedTab = memo((props: any): JSX.Element => {
   };
 
   if (loading) return <ActivityIndicator style={styles.loading} size={'large'} color={'black'} />;
+  if (response?.length === 0)
+    return (
+      <View style={{ marginTop: 50 }}>
+        <TextField
+          label={'No videos yet'}
+          style={{ ...TYPOGRAPHY_STYLES.Body2, fontWeight: 'bold', color: 'black', textAlign: 'center' }}
+        />
+        <View style={{ marginTop: 10 }}>
+          <TextField
+            label={`Videos posted by ${name} will apear here`}
+            style={{ ...TYPOGRAPHY_STYLES.Body2, color: 'black', textAlign: 'center', opacity: 0.5 }}
+          />
+        </View>
+      </View>
+    );
   return <FlatList data={response} renderItem={renderItem} numColumns={3} />;
 });
 

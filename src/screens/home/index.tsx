@@ -2,7 +2,7 @@ import { WINDOW_WIDTH } from '@gorhom/bottom-sheet';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
-import { BackHandler, StyleSheet, ToastAndroid } from 'react-native';
+import { ActivityIndicator, BackHandler, StyleSheet, ToastAndroid } from 'react-native';
 import { Route, TabBar, TabView } from 'react-native-tab-view';
 import { TextField } from '../../components/text-field';
 import { WHITE } from '../../styles/color';
@@ -50,12 +50,18 @@ export const HomeScreen = (): JSX.Element => {
     }
   };
 
+  const LazyPlaceholder = () => <ActivityIndicator style={styles.loading} size={'large'} color={'blue'} />;
+
+  const renderLazyPlaceholder = () => <LazyPlaceholder />;
+
   return (
     <TabView
+      lazy
       navigationState={{ index, routes }}
       renderScene={renderScene}
       onIndexChange={setIndex}
       initialLayout={{ width: WINDOW_WIDTH }}
+      renderLazyPlaceholder={renderLazyPlaceholder}
       renderTabBar={(props) => (
         <TabBar
           {...props}
@@ -80,5 +86,6 @@ const styles = StyleSheet.create({
     right: 0,
     elevation: 0
   },
-  fontStyle: { ...TYPOGRAPHY_STYLES.Body1, fontWeight: 'bold' }
+  fontStyle: { ...TYPOGRAPHY_STYLES.Body1, fontWeight: 'bold' },
+  loading: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }
 });

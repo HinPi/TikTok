@@ -8,7 +8,14 @@ export const ROUTE_KEYS = Object.freeze({
   RECORD_VIDEO: 'record',
   UPLOAD: 'Upload',
   OTHER_PROFILE: 'OtherProfile',
-  SETTING: 'Setting'
+  SETTING: 'Setting',
+  FOLLOW: 'Follow',
+  OTHER_FOLLOW: 'OtherFollow',
+  FLATLIST: 'FlatList',
+  LISTUSER: 'listUser',
+  CHAT: 'chat',
+  EDIT: 'edit',
+  INPUT: 'input'
 });
 
 export const PATH = {
@@ -16,10 +23,16 @@ export const PATH = {
   VIDEO: '/video',
   PROFILE: '/profile',
   LIKED: '/video/likedvideo',
-  COMMENT: '/comment'
+  COMMENT: '/comment',
+  LISTUSER: '/chat/listUser'
 };
 
-export const DATE_FORMATS = { dddd_DD_MM_YYYY: 'dddd.DD-MM-YYYY', DD_MM_YYYY: 'YYYY-MM-DD' + 'T' + 'HH:mm:ss', HH_mm: 'HH:mm' };
+export const DATE_FORMATS = {
+  dddd_DD_MM_YYYY: 'dddd.DD-MM-YYYY',
+  DD_MM: 'MM-DD',
+  DD_MM_YYYY: 'YYYY-MM-DD' + 'T' + 'HH:mm:ss',
+  HH_mm: 'HH:mm'
+};
 
 export const DEFAULT_HEIGHT = {
   TAB_BAR: 50

@@ -1,16 +1,27 @@
+import { devImageUri } from '@env';
+import { PortalProvider } from '@gorhom/portal';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { DefaultTheme, NavigationContainer, Theme } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
 import React, { Fragment, useEffect, useRef } from 'react';
-import { NativeModules, Platform, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, NativeModules, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
+import { TextField } from '../components/text-field';
 import { DEFAULT_HEIGHT, ROUTE_KEYS } from '../constants';
 import { getItem } from '../device-info';
+import { ChatScreen } from '../screens/chat/ChatScreen';
+import { ListUserScreen } from '../screens/chat/ListUserScreen';
+import { FollowerScreen } from '../screens/follow';
 import { FriendsScreen } from '../screens/friends';
 import { HomeScreen } from '../screens/home';
 import { NotificationScreen } from '../screens/notification';
+import { OtherFollowScreen } from '../screens/other-follow';
 import { OtherProfile } from '../screens/other-profile';
 import { ProfileScreen } from '../screens/profile';
+import { FlatListScreen } from '../screens/profile/components/FlatList';
+import { InputScreen } from '../screens/profile/components/input';
+import { EditProfileScreen } from '../screens/profile/EditProfile';
 import { SettingScreen } from '../screens/setting-privacy';
 import { UploadScreen } from '../screens/upload';
 import { useStore } from '../store';
@@ -135,6 +146,7 @@ const NativeStackNavigator = () => {
         name={ROUTE_KEYS.PERSONAL}
         component={ProfileScreen}
         options={({ route }) => ({
+          unmountOnBlur: true,
           tabBarLabel: 'Profile',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} Item={PersonSvg} route={route.name} />
         })}
@@ -143,10 +155,26 @@ const NativeStackNavigator = () => {
   );
 };
 
+const HomePage = () => {
+  return (
+    <PortalProvider>
+      <NativeStackNavigator />
+    </PortalProvider>
+  );
+};
+
+const PortalFlatList = ({ route, navigation }: NativeStackScreenProps<StackParamList>) => {
+  return (
+    <PortalProvider>
+      <FlatListScreen route={route} navigation={navigation} />
+    </PortalProvider>
+  );
+};
+
 const AuthorizedRoutes = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name={'NativeStack'} component={NativeStackNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name={'NativeStack'} component={HomePage} options={{ headerShown: false }} />
       <Stack.Screen name={ROUTE_KEYS.UPLOAD} component={UploadScreen} />
       <Stack.Screen
         name={ROUTE_KEYS.OTHER_PROFILE}
@@ -157,6 +185,77 @@ const AuthorizedRoutes = () => {
         name={ROUTE_KEYS.SETTING}
         component={SettingScreen}
         options={{ title: 'Settings and privacy', headerTitleAlign: 'center' }}
+      />
+      <Stack.Screen
+        name={ROUTE_KEYS.FOLLOW}
+        component={FollowerScreen}
+        options={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}
+      />
+      <Stack.Screen
+        name={ROUTE_KEYS.OTHER_FOLLOW}
+        component={OtherFollowScreen}
+        options={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }}
+      />
+      <Stack.Screen
+        name={ROUTE_KEYS.FLATLIST}
+        component={PortalFlatList}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+        }}
+      />
+      <Stack.Screen
+        name={ROUTE_KEYS.LISTUSER}
+        component={ListUserScreen}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          title: 'Messages',
+          headerTitleAlign: 'center'
+        }}
+      />
+      <Stack.Screen
+        name={ROUTE_KEYS.CHAT}
+        component={ChatScreen}
+        options={({ route }) => ({
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          headerTitle: () => (
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+              <Image
+                style={{ width: 40, height: 40, borderRadius: 50, borderWidth: 2, borderColor: '#fff' }}
+                source={{
+                  uri:
+                    route.params?.avatarLarger.split(':')[0] === 'https'
+                      ? route.params?.avatarLarger
+                      : devImageUri + route.params?.avatarLarger
+                }}
+              />
+              <TextField
+                label={route.params?.nickName}
+                style={{ color: 'black', fontSize: 16, fontWeight: 'bold', marginLeft: 10 }}
+              />
+            </View>
+          )
+        })}
+      />
+      <Stack.Screen
+        name={ROUTE_KEYS.EDIT}
+        component={EditProfileScreen}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          title: 'Edit profile',
+          headerTitleAlign: 'center',
+          headerTitleStyle: { fontSize: 18, fontWeight: 'bold' }
+        }}
+      />
+      <Stack.Screen
+        name={ROUTE_KEYS.INPUT}
+        component={InputScreen}
+        options={({ route }) => ({
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          headerTitle: () => (
+            <TextField label={route.params?.title} style={{ color: 'black', fontSize: 18, fontWeight: 'bold' }} />
+          ),
+          headerTitleAlign: 'center'
+        })}
       />
     </Stack.Navigator>
   );
@@ -174,7 +273,7 @@ const TabBarIcon = (props: any) => {
     <Animatable.View ref={tabRef} style={styles.tabIcon}>
       <Item
         fill={(route == 'Home' || route == 'Friends') && focused ? 'white' : 'none'}
-        color={(route == 'Home' || route == 'Friends') && focused ? 'white' : '#4A4A4A'}
+        color={(route == 'Home' || route == 'Friends') && focused ? 'white' : 'black'}
       />
     </Animatable.View>
   );

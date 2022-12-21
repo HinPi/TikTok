@@ -8,6 +8,7 @@ interface AppCredentials {
   userName?: string;
   avatar?: string;
   token?: string;
+  id?: string;
 }
 
 type infoLogin = {
@@ -20,10 +21,15 @@ interface Store extends AppCredentials {
   credentials?: AppCredentials;
   isLogged?: boolean;
   isConnected?: boolean;
+  bio?: string;
+  name?: string;
+  userName?: string;
   setCredentials: (credentials: AppCredentials) => void;
+  setDataUser: (props: { bio?: string; name?: string; userName?: string }) => void;
   login: (params: infoLogin) => Promise<void>;
   logout: () => Promise<void>;
   postData: (token?: string, path?: string, params?: { message?: string }) => Promise<void>;
+  patchData: (token?: string, params?: { message?: string }) => Promise<void>;
 }
 
 export const useStore = create<Store>((set) => ({
@@ -32,6 +38,9 @@ export const useStore = create<Store>((set) => ({
   isConnected: true,
   setCredentials: (credentials: AppCredentials) => {
     set((state) => ({ ...state, credentials, isLogged: true }));
+  },
+  setDataUser: (props: { bio?: string; name?: string; userName?: string }) => {
+    set((state) => ({ ...state, bio: props.bio, name: props.name, userName: props.userName }));
   },
   login: async (params: infoLogin) => {
     try {
@@ -42,10 +51,10 @@ export const useStore = create<Store>((set) => ({
       });
       const resJson = await response.json();
 
-      setItem('credentials', { token: resJson.accessToken, avatar: params.imgURL, name: params.name });
+      setItem('credentials', { token: resJson.accessToken, avatar: params.imgURL, name: params.name, id: params.userID });
       set((state) => ({
         ...state,
-        credentials: { token: resJson.accessToken, avatar: params.imgURL, name: params.name },
+        credentials: { token: resJson.accessToken, avatar: params.imgURL, name: params.name, id: params.userID },
         isLogged: true
       }));
     } catch (error) {
@@ -65,8 +74,29 @@ export const useStore = create<Store>((set) => ({
       console.log(err);
     }
   },
+  patchData: async (token?: string, params?: { message?: string }) => {
+    try {
+      const response = await fetch(devApiUrl + PATH.PROFILE, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(params)
+      });
+      const resJson = await response.json();
+      console.log(resJson);
+    } catch (err) {
+      console.log(err);
+    }
+  },
   logout: async () => {
     removeItem('credentials');
-    set((state) => ({ ...state, isLogged: false, token: undefined, avatar: undefined, name: undefined }));
+    set((state) => ({
+      ...state,
+      isLogged: false,
+      token: undefined,
+      avatar: undefined,
+      name: undefined,
+      id: undefined,
+      credentials: undefined
+    }));
   }
 }));

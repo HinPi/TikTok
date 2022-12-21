@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import localeVI from 'dayjs/locale/vi';
+import moment from 'moment';
 import { DATE_FORMATS } from '../constants';
 
 export const isNullOrUndefined = (value?: unknown): boolean => {
@@ -18,8 +18,8 @@ export const formatDateTime = (timeString?: Date | string): string => {
 
 export const timeForNotification = (timeString?: string): string => {
   if (isNullOrUndefined(timeString)) return '';
-  if (dayjs(timeString).isAfter(dayjs(new Date()).add(-1, 'day'))) return dayjs(timeString).format(DATE_FORMATS.HH_mm);
-  return dayjs(timeString).locale(localeVI).format(DATE_FORMATS.dddd_DD_MM_YYYY);
+  if (dayjs(timeString).isAfter(dayjs(new Date()).add(-1, 'day'))) return moment(timeString).fromNow().split(' ago')[0];
+  return dayjs(timeString).format(DATE_FORMATS.DD_MM);
 };
 
 export const formatMillion = (num: number): string => {

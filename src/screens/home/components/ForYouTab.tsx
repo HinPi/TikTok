@@ -1,6 +1,6 @@
 import { WINDOW_HEIGHT } from '@gorhom/bottom-sheet';
 import React, { memo, useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet } from 'react-native';
+import { FlatList } from 'react-native';
 import { DEFAULT_HEIGHT, PATH } from '../../../constants';
 import { useFetch } from '../../../handle-api';
 import { Item } from './item';
@@ -9,7 +9,6 @@ export const ForYouScreen = memo((): JSX.Element => {
   const { loading, response } = useFetch(PATH.VIDEO);
   const [activeVideoIndex, setActiveVideoIndex] = useState(0);
 
-  if (loading) return <ActivityIndicator style={styles.loading} size={'large'} color={'blue'} />;
   return (
     <FlatList
       style={{ flex: 1 }}
@@ -25,11 +24,10 @@ export const ForYouScreen = memo((): JSX.Element => {
       snapToAlignment={'end'}
       decelerationRate={'fast'}
       disableIntervalMomentum
-      removeClippedSubviews
+      removeClippedSubviews={true}
+      initialNumToRender={3}
+      maxToRenderPerBatch={3}
+      windowSize={5}
     />
   );
-});
-
-const styles = StyleSheet.create({
-  loading: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }
 });

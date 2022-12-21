@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import React from 'react';
 import { TextInput as RNTextInput } from 'react-native-paper';
 import { BLACK_20, BLACK_40, DARK_RED, PRIMARY } from '../../styles/color';
 import { TYPOGRAPHY_STYLES } from '../../styles/typography';
-import { HideSvg, ShowSvg } from '../../svg-view';
 
 export type TextInputProps = React.ComponentProps<typeof RNTextInput>;
 
@@ -17,44 +15,51 @@ export const TextInput = (props: TextInputProps): JSX.Element => {
     style,
     error,
     left,
+    value,
     right,
+    label,
+    onChangeText,
     secureTextEntry,
+    defaultValue,
+    multiline,
+    numberOfLines = 1,
     ...other
   } = props;
-  const [secureText, setSecureText] = useState(secureTextEntry);
 
   return (
     <RNTextInput
       {...other}
       theme={{ roundness: 12 }}
       mode={mode}
+      label={label}
+      defaultValue={defaultValue}
+      //   right={
+      //     values && (
+      //       <RNTextInput.Icon
+      //         icon={() => (
+      //           <TouchableOpacity
+      //             onPress={() => {
+      //               setValue('');
+      //             }}
+      //             activeOpacity={0.5}
+      //             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+      //           >
+      //             <RemoveSvg />
+      //           </TouchableOpacity>
+      //         )}
+      //       />
+      //     )
+      //   }
+      onChangeText={onChangeText}
       allowFontScaling={false}
-      left={left && <RNTextInput.Icon name={() => left} />}
-      right={
-        secureTextEntry && (
-          <RNTextInput.Icon
-            name={() => (
-              <TouchableOpacity
-                onPress={() => setSecureText(!secureText)}
-                activeOpacity={0.7}
-                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              >
-                {secureText ? <HideSvg /> : <ShowSvg />}
-              </TouchableOpacity>
-            )}
-          />
-        )
-      }
       outlineColor={error ? DARK_RED : outlineColor}
       selectionColor={error ? DARK_RED : selectionColor}
       activeOutlineColor={error ? DARK_RED : activeOutlineColor}
       placeholderTextColor={placeholderTextColor}
-      style={[TYPOGRAPHY_STYLES.Body2, styles.bgColor, style]}
-      secureTextEntry={secureText}
+      style={[TYPOGRAPHY_STYLES.Body2, style]}
+      //   secureTextEntry={secureText}
+      multiline={multiline}
+      numberOfLines={numberOfLines}
     />
   );
 };
-
-const styles = StyleSheet.create({
-  bgColor: { backgroundColor: 'rgba(242, 244, 250, 0.6)' }
-});

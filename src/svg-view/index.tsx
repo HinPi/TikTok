@@ -1,4 +1,4 @@
-import Svg, { Circle, ClipPath, Defs, G, Path, Rect, SvgProps } from 'react-native-svg';
+import Svg, { Circle, ClipPath, Defs, Ellipse, G, Path, Rect, SvgProps } from 'react-native-svg';
 import { BLACK_100, BLACK_50 } from '../styles/color';
 
 export const HomeIconSvg = ({ width = 24, height = 21, color = 'black', fill = 'none', ...props }: SvgProps): JSX.Element => {
@@ -34,24 +34,20 @@ export const PersonSvg = ({ width = 19, height = 21, color = '#000000', fill = '
   );
 };
 
-export const InboxIconSvg = ({ width = 20, height = 21, color = 'black', fill = 'none', ...props }: SvgProps): JSX.Element => {
+export const InboxIconSvg = ({ width = 20, height = 21, fill = 'none', color = 'none', ...props }: SvgProps): JSX.Element => {
   return (
     <Svg width={width} height={height} viewBox="0 0 20 21" fill="none" {...props}>
       <Path
-        d="M6.5 8C6.22386 8 6 8.22386 6 8.5V9.5C6 9.77614 6.22386 10 6.5 10H13.5C13.7761 10 14 9.77614 14 9.5V8.5C14 8.22386 13.7761 8 13.5 8H6.5Z"
-        fill={fill}
-        stroke={color}
-      />
-      <Path
         fillRule="evenodd"
         clipRule="evenodd"
-        d="M2 0C0.895431 0 0 0.895431 0 2V15C0 16.1046 0.895431 17 2 17H6.54007L9.23785 20.1759C9.6372 20.6461 10.3628 20.6461 10.7621 20.1759L13.4599 17H18C19.1046 17 20 16.1046 20 15V2C20 0.89543 19.1046 0 18 0H2ZM2 15V2H18V15H13.0037C12.7096 15 12.4305 15.1294 12.2405 15.3538L10 18L7.75951 15.3538C7.56951 15.1294 7.29037 15 6.99633 15H2Z"
+        d="M0 2C0 0.895431 0.895431 0 2 0H18C19.1046 0 20 0.89543 20 2V15C20 16.1046 19.1046 17 18 17H13.4599L10.7621 20.1759C10.3628 20.6461 9.6372 20.6461 9.23785 20.1759L6.54007 17H2C0.895431 17 0 16.1046 0 15V2ZM6 8.5C6 8.22386 6.22386 8 6.5 8H13.5C13.7761 8 14 8.22386 14 8.5V9.5C14 9.77614 13.7761 10 13.5 10H6.5C6.22386 10 6 9.77614 6 9.5V8.5Z"
         fill={fill}
         stroke={color}
       />
     </Svg>
   );
 };
+//#161722
 
 export const DiscoverIconSvg = ({
   width = 21,
@@ -138,10 +134,11 @@ export const LogOutSvg = ({ width = 20, height = 20, ...props }: SvgProps): JSX.
   );
 };
 
-export const ArrowRight = ({ width = 20, height = 20, ...props }: SvgProps): JSX.Element => {
+export const ArrowRight = ({ width = 12, height = 18, ...props }: SvgProps): JSX.Element => {
   return (
-    <Svg width={width} height={height} viewBox="0 0 41 60" fill="none" {...props}>
-      <Path d="M1 58.5L39.75 29.75L1 1" stroke="#b0b0b4" strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" />
+    <Svg width={width} height={height} viewBox="0 0 5 11" fill="none" {...props}>
+      <Path d="M0.5 0.799988L4.3 5.39999L0.5 10.2" fill="white" />
+      <Path d="M0.5 0.799988L4.3 5.39999L0.5 10.2" stroke="black" strokeMiterlimit={10} strokeLinecap="round" />
     </Svg>
   );
 };
@@ -324,6 +321,208 @@ export const ArrowUpSvg = ({ width = 25, height = 25, ...props }: SvgProps): JSX
           <Rect width={22} height={22} fill="white" />
         </ClipPath>
       </Defs>
+    </Svg>
+  );
+};
+
+export const HugHeartSvg = ({ width = 297, height = 157, ...props }: SvgProps): JSX.Element => {
+  return (
+    <Svg width={width} height={height} viewBox="0 0 447 307" fill="none" {...props}>
+      <Path
+        d="M201.368 157.888C81.9993 48.5388 -45.1324 184.388 221.368 306.388C414.474 205.401 364.525 -0.441628 201.368 157.888Z"
+        fill="#ED647D"
+        stroke="#ED647D"
+        strokeLinecap="round"
+      />
+      <Path d="M355 83.0032C384.853 73.0818 398.026 63.8295 412.5 38.0032" stroke="black" strokeWidth={5} strokeLinecap="round" />
+      <Path d="M412.5 37.5C407.999 1.00013 350 38.003 403.001 50.003" stroke="black" strokeWidth={5} strokeLinecap="round" />
+      <Path d="M404 51.5032C420.97 52.9868 429.7 52.024 444 47.5032" stroke="black" strokeWidth={5} strokeLinecap="round" />
+      <Path d="M160.5 271.503L157.5 273.503" stroke="black" strokeWidth={5} strokeLinecap="round" />
+      <Path d="M133.5 244.503C179.5 210.503 194.5 218.503 154 255.503" stroke="black" strokeWidth={5} />
+      <Path d="M154.5 256.003C185.5 221.003 199.5 237.003 160.5 271.503" stroke="black" strokeWidth={5} />
+      <Path d="M94.0001 173.503C43.5 273.503 59.4999 332.003 157.5 273.503" stroke="black" strokeWidth={5} />
+      <Path d="M332 244.504C299 191.503 290.5 196.003 311.5 244.504" stroke="black" strokeWidth={5} />
+      <Path d="M310.999 245.003C286.999 207.503 272.5 212.003 297.499 256.503" stroke="black" strokeWidth={5} />
+      <Path
+        d="M296.501 256.503C263.001 211.503 251.5 231.003 283.501 278.503"
+        stroke="black"
+        strokeWidth={5}
+        strokeLinecap="round"
+      />
+      <Path d="M283.5 278.5C347 338 395.5 285.503 319.5 169.503" stroke="black" strokeWidth={5} strokeLinecap="round" />
+      <Path d="M154 42.0032L294 19.5032" stroke="black" strokeWidth={5} />
+      <Path d="M171 55.0032C187.65 75.5586 194.35 70.1609 204.5 49.0032" stroke="black" strokeWidth={5} />
+      <Path d="M216 51.0032C227.304 70.3585 235.054 67.5442 250.5 47.0032" stroke="black" strokeWidth={5} />
+      <Path d="M180.5 79.5032C196.936 93.1016 205.754 92.8633 220.5 73.0032" stroke="black" strokeWidth={5} />
+      <Path d="M154.5 153.003L172.5 109.003" stroke="black" strokeWidth={5} strokeLinecap="round" />
+      <Path d="M274.5 162.503L235.5 99.5032" stroke="black" strokeWidth={5} strokeLinecap="round" />
+      <Path
+        d="M172.5 109.003C81.4998 -33.9969 342.5 -27.4969 235.5 99.5032"
+        stroke="black"
+        strokeWidth={5}
+        strokeLinecap="round"
+      />
+      <Path d="M96 70.0032L79.5 35.5032" stroke="black" strokeWidth={5} />
+      <Path d="M39 106.003L2 77.5032" stroke="black" strokeWidth={5} />
+      <Path d="M63.5 82.5032L38.5 49.0032" stroke="black" strokeWidth={5} />
+      <Path d="M112 242.003C155 201.003 174.5 210.503 137 242.003" stroke="black" strokeWidth={5} />
+    </Svg>
+  );
+};
+
+export const UnfollowSvg = ({ width = 24, height = 24, ...props }: SvgProps): JSX.Element => {
+  return (
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none" {...props}>
+      <Path
+        d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H6C4.93913 15 3.92172 15.4214 3.17157 16.1716C2.42143 16.9217 2 17.9391 2 19V21"
+        stroke="black"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Path
+        d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z"
+        stroke="black"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Path d="M16 11L18 13L22 9" stroke="black" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+};
+
+export const MessageSvg = ({ width = 66, height = 69, ...props }: SvgProps): JSX.Element => {
+  return (
+    <Svg width={width} height={height} viewBox="0 0 66 69" fill="none" {...props}>
+      <Path
+        d="M19 27.5C18.1716 27.5 17.5 28.1716 17.5 29C17.5 29.8284 18.1716 30.5 19 30.5H47C47.8284 30.5 48.5 29.8284 48.5 29C48.5 28.1716 47.8284 27.5 47 27.5H19Z"
+        fill="#B0B0B3"
+      />
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M4.5 0.5C2.01472 0.5 0 2.51472 0 5V52.5C0 54.9853 2.01472 57 4.5 57H22.0119C22.4807 57 22.9225 57.2192 23.2062 57.5924L31.0096 67.86C32.0101 69.1764 33.99 69.1764 34.9904 67.86L42.7938 57.5924C43.0775 57.2192 43.5193 57 43.9881 57H61.5C63.9853 57 66 54.9853 66 52.5V5C66 2.51472 63.9853 0.5 61.5 0.5H4.5ZM3 5C3 4.17157 3.67157 3.5 4.5 3.5H61.5C62.3284 3.5 63 4.17157 63 5V52.5C63 53.3284 62.3284 54 61.5 54H43.9881C42.5818 54 41.2563 54.6575 40.4053 55.7771L33 65.521L25.5947 55.7771C24.7437 54.6575 23.4182 54 22.0119 54H4.5C3.67157 54 3 53.3284 3 52.5V5Z"
+        fill="#B0B0B3"
+      />
+    </Svg>
+  );
+};
+
+export const ChatSvg = ({ width = 24, height = 20, ...props }: SvgProps): JSX.Element => {
+  return (
+    <Svg width={width} height={height} viewBox="0 0 24 20" fill="none" {...props}>
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M0.792884 1.70711C0.162919 1.07714 0.609085 0 1.49999 0H22C22.7678 0 23.2492 0.829481 22.8682 1.49614L12.8682 18.9961C12.4322 19.7592 11.2947 19.6291 11.0422 18.7873L8.11461 9.02883L0.792884 1.70711ZM10.1841 8.96697L12.2881 15.9802L20.2768 2H3.9142L9.162 7.24779L14.4961 4.13622C14.9732 3.85794 15.5855 4.01908 15.8638 4.49613C16.142 4.97318 15.9809 5.5855 15.5039 5.86378L10.1841 8.96697Z"
+        fill="black"
+      />
+    </Svg>
+  );
+};
+
+export const CameraSvg = ({ width = 28, height = 22, ...props }: SvgProps): JSX.Element => {
+  return (
+    <Svg width={width} height={height} viewBox="0 0 28 22" fill="none" {...props}>
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M19.5 11.75C19.5 14.7876 17.0376 17.25 14 17.25C10.9624 17.25 8.5 14.7876 8.5 11.75C8.5 8.71243 10.9624 6.25 14 6.25C17.0376 6.25 19.5 8.71243 19.5 11.75ZM17.5 11.75C17.5 13.683 15.933 15.25 14 15.25C12.067 15.25 10.5 13.683 10.5 11.75C10.5 9.817 12.067 8.25 14 8.25C15.933 8.25 17.5 9.817 17.5 11.75Z"
+        fill="white"
+      />
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M10.2208 0C9.3599 0 8.59562 0.55086 8.32339 1.36754L7.77924 3H3.5C1.84315 3 0.5 4.34315 0.5 6V18.5C0.5 20.1569 1.84315 21.5 3.5 21.5H24.5C26.1569 21.5 27.5 20.1569 27.5 18.5V6C27.5 4.34315 26.1569 3 24.5 3H20.2208L19.6766 1.36754C19.4044 0.55086 18.6401 0 17.7792 0H10.2208ZM10.2208 2H17.7792L18.3234 3.63246C18.5956 4.44914 19.3599 5 20.2208 5H24.5C25.0523 5 25.5 5.44772 25.5 6V18.5C25.5 19.0523 25.0523 19.5 24.5 19.5H3.5C2.94772 19.5 2.5 19.0523 2.5 18.5V6C2.5 5.44772 2.94772 5 3.5 5H7.77924C8.6401 5 9.40438 4.44914 9.67661 3.63246L10.2208 2Z"
+        fill="white"
+      />
+    </Svg>
+  );
+};
+
+export const RemoveSvg = ({ width = 22, height = 22, ...props }: SvgProps): JSX.Element => {
+  return (
+    <Svg width={width} height={height} viewBox="0 0 22 22" fill="none" {...props}>
+      <Circle cx={11} cy={11} r={11} fill="#CAC7C7" />
+      <Path d="M8.17163 8.17163C11.1886 11.1886 13.1999 13.1999 13.8285 13.8285" stroke="white" strokeLinecap="round" />
+      <Path d="M8.17163 13.8284L13.8285 8.17151" stroke="white" strokeLinecap="round" />
+    </Svg>
+  );
+};
+
+export const InboxSvg = ({ width = 28, height = 24, ...props }: SvgProps): JSX.Element => {
+  return (
+    <Svg width={width} height={height} viewBox="0 0 28 24" fill="none" {...props}>
+      <G clipPath="url(#clip0_204_2)">
+        <Rect width={24} height={24} fill="white" />
+        <Path
+          d="M18 3H5.22222C4.63285 3 4.06762 3.21071 3.65087 3.58579C3.23413 3.96086 3 4.46957 3 5V21L7.44444 17H20.7778C21.3671 17 21.9324 16.7893 22.3491 16.4142C22.7659 16.0391 23 15.5304 23 15V8"
+          stroke="black"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <Path d="M23 8C27 8 28.6667 8 29 8V19.5H14L13 21.5H12.5V18" stroke="black" strokeWidth={1.3} />
+      </G>
+      <Path d="M24 19.5H27V14V8H23" stroke="black" strokeWidth={1.3} />
+      <G clipPath="url(#clip1_204_2)">
+        <Path d="M23 1V5.08333" stroke="black" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+        <Path d="M21 3H25.0833" stroke="black" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      </G>
+      <Defs>
+        <ClipPath id="clip0_204_2">
+          <Rect width={24} height={24} fill="white" />
+        </ClipPath>
+        <ClipPath id="clip1_204_2">
+          <Rect width={7} height={7} fill="white" transform="translate(19)" />
+        </ClipPath>
+      </Defs>
+    </Svg>
+  );
+};
+
+export const SendSvg = ({ width = 35, height = 31, fill = '#FF0000', ...props }: SvgProps): JSX.Element => {
+  return (
+    <Svg width={width} height={height} viewBox="0 0 39 36" fill="none" {...props}>
+      <Ellipse cx={19.5} cy={18} rx={19.5} ry={18} fill={fill} />
+      <Path d="M28 9L17 20" stroke="white" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M28 9L21 29L17 20L8 16L28 9Z" stroke="white" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+};
+
+export const FriendsSvg = ({ width = 72, height = 66, ...props }: SvgProps): JSX.Element => {
+  return (
+    <Svg width={width} height={height} viewBox="0 0 36 30" fill="none" {...props}>
+      <Path
+        d="M24 26.25V23.75C24 22.4239 23.3679 21.1521 22.2426 20.2145C21.1174 19.2768 19.5913 18.75 18 18.75H9C7.4087 18.75 5.88258 19.2768 4.75736 20.2145C3.63214 21.1521 3 22.4239 3 23.75V26.25"
+        stroke="#D9D9D9"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Path
+        d="M13.5 13.75C16.8137 13.75 19.5 11.5114 19.5 8.75C19.5 5.98858 16.8137 3.75 13.5 3.75C10.1863 3.75 7.5 5.98858 7.5 8.75C7.5 11.5114 10.1863 13.75 13.5 13.75Z"
+        stroke="#D9D9D9"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Path
+        d="M33 26.25V23.75C32.999 22.6422 32.5565 21.566 31.742 20.6904C30.9276 19.8148 29.7872 19.1895 28.5 18.9125"
+        stroke="#D9D9D9"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Path
+        d="M24 3.91251C25.2906 4.18788 26.4346 4.81338 27.2515 5.69039C28.0684 6.56741 28.5118 7.64604 28.5118 8.75626C28.5118 9.86647 28.0684 10.9451 27.2515 11.8221C26.4346 12.6991 25.2906 13.3246 24 13.6"
+        stroke="#D9D9D9"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </Svg>
   );
 };
