@@ -20,18 +20,19 @@ export const FlatListScreen = memo(({ route, navigation }: Props): JSX.Element =
     navigation.setOptions({
       headerLeft: () => (
         <View style={{ marginLeft: 10 }}>
-          <TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
             <ArrowBackSvg color={WHITE} />
           </TouchableWithoutFeedback>
         </View>
       ),
+      headerTransparent: true,
       headerTitle: ''
     });
-  }, [response]);
+  }, []);
 
   const getItemLayout = (data: any, index: number) => ({
-    length: WINDOW_HEIGHT - 48,
-    offset: (WINDOW_HEIGHT - 48) * index,
+    length: WINDOW_HEIGHT,
+    offset: WINDOW_HEIGHT * index,
     index
   });
 
@@ -47,14 +48,14 @@ export const FlatListScreen = memo(({ route, navigation }: Props): JSX.Element =
         setActiveVideoIndex(index);
       }}
       showsVerticalScrollIndicator={false}
-      snapToInterval={WINDOW_HEIGHT - 48}
+      snapToInterval={WINDOW_HEIGHT}
       snapToAlignment={'end'}
       decelerationRate={'fast'}
       disableIntervalMomentum
       getItemLayout={getItemLayout}
       removeClippedSubviews={true}
-      initialNumToRender={3}
-      maxToRenderPerBatch={3}
+      initialNumToRender={2}
+      maxToRenderPerBatch={1}
       windowSize={5}
     />
   );

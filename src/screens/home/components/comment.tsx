@@ -19,7 +19,8 @@ import { TYPOGRAPHY_STYLES } from '../../../styles/typography';
 import { ArrowUpSvg } from '../../../svg-view';
 import { timeForNotification } from '../../../utils';
 import { LoginModal } from '../../login';
-export const ModalComment = forwardRef((props: { id?: string }, ref?: Ref<BottomSheet>) => {
+
+export const ModalComment = forwardRef((props: { id?: string }, ref?: Ref<BottomSheet>): JSX.Element => {
   const { isLogged } = useStore();
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const { id } = props;
@@ -29,7 +30,6 @@ export const ModalComment = forwardRef((props: { id?: string }, ref?: Ref<Bottom
   const { token, avatar, name } = useStore((store) => store.credentials || {});
   const [data, setData] = useState<any>([]);
   const { response, loading } = useFetch(`${PATH.VIDEO}/${id}/comments`);
-
   useEffect(() => {
     setData(response);
   }, [response]);
@@ -69,7 +69,15 @@ export const ModalComment = forwardRef((props: { id?: string }, ref?: Ref<Bottom
     ({ item }: { item: string }) => (
       <View style={styles.itemContainer}>
         <TouchableOpacity onPress={() => handleNavigate(item.author._id)}>
-          <Image source={{ uri: item.author.avatarLarger }} style={styles.imgComment} />
+          <Image
+            source={{
+              uri:
+                item.author.avatarLarger.split(':')[0] === 'https'
+                  ? item.author.avatarLarger
+                  : devImageUri + item.author.avatarLarger
+            }}
+            style={styles.imgComment}
+          />
         </TouchableOpacity>
         <View style={{ marginLeft: 10 }}>
           <TouchableOpacity onPress={() => handleNavigate(item.author._id)}>

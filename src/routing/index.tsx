@@ -68,6 +68,24 @@ const Recording = () => {
   return null;
 };
 
+const TabBarIcon = (props: any) => {
+  const { focused, Item, route } = props;
+  const tabRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (focused) tabRef.current?.animate({ 0: { scale: 1 }, 0.5: { scale: 1.5 }, 1: { scale: 1 } });
+  });
+
+  return (
+    <Animatable.View ref={tabRef} style={styles.tabIcon}>
+      <Item
+        fill={route === 'Home' || route === 'Friends' ? 'white' : 'black'}
+        color={route === 'Home' || route === 'Friends' ? 'black' : 'white'}
+      />
+    </Animatable.View>
+  );
+};
+
 const NativeStackNavigator = () => {
   return (
     <Tab.Navigator
@@ -171,6 +189,14 @@ const PortalFlatList = ({ route, navigation }: NativeStackScreenProps<StackParam
   );
 };
 
+const PortalEditProfileScreen = ({ route, navigation }: NativeStackScreenProps<StackParamList>) => {
+  return (
+    <PortalProvider>
+      <EditProfileScreen route={route} navigation={navigation} />
+    </PortalProvider>
+  );
+};
+
 const AuthorizedRoutes = () => {
   return (
     <Stack.Navigator>
@@ -238,7 +264,7 @@ const AuthorizedRoutes = () => {
       />
       <Stack.Screen
         name={ROUTE_KEYS.EDIT}
-        component={EditProfileScreen}
+        component={PortalEditProfileScreen}
         options={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           title: 'Edit profile',
@@ -258,24 +284,6 @@ const AuthorizedRoutes = () => {
         })}
       />
     </Stack.Navigator>
-  );
-};
-
-const TabBarIcon = (props: any) => {
-  const { focused, Item, route } = props;
-  const tabRef = useRef<any>(null);
-
-  useEffect(() => {
-    if (focused) tabRef.current?.animate({ 0: { scale: 1 }, 0.5: { scale: 1.5 }, 1: { scale: 1 } });
-  });
-
-  return (
-    <Animatable.View ref={tabRef} style={styles.tabIcon}>
-      <Item
-        fill={(route == 'Home' || route == 'Friends') && focused ? 'white' : 'none'}
-        color={(route == 'Home' || route == 'Friends') && focused ? 'white' : 'black'}
-      />
-    </Animatable.View>
   );
 };
 

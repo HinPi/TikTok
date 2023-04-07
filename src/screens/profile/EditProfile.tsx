@@ -1,23 +1,18 @@
+import { devImageUri } from '@env';
+import BottomSheet from '@gorhom/bottom-sheet';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React from 'react';
+import React, { useRef } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { TextField } from '../../components/text-field';
 import { useStore } from '../../store';
 import { ArrowRight, CameraSvg } from '../../svg-view';
+import { Option } from './components/option';
 
 type Props = NativeStackScreenProps<StackParamList>;
-type Author = {
-  img: string;
-  name: string;
-  userName: string;
-  bio?: string;
-};
-export const EditProfileScreen = ({ navigation, route }: Props): JSX.Element => {
-  const { params } = route;
-  const bio = useStore((state) => state.bio);
-  const name = useStore((state) => state.name);
-  const userName = useStore((state) => state.userName);
 
+export const EditProfileScreen = ({ navigation, route }: Props): JSX.Element => {
+  const { avatar, bio, name, userName } = useStore((state) => state.credentials || {});
+  const sheetRef = useRef<BottomSheet>(null);
   const handleNavigate = ({ data, name, title }: { data?: string; name: string; title: string }) => {
     navigation.navigate('input', { data, name, title });
   };
@@ -25,11 +20,11 @@ export const EditProfileScreen = ({ navigation, route }: Props): JSX.Element => 
   return (
     <View style={{ marginHorizontal: 15 }}>
       <View style={styles.view}>
-        <TouchableOpacity style={{ alignItems: 'center' }}>
+        <TouchableOpacity onPress={() => sheetRef.current?.collapse()} style={{ alignItems: 'center' }}>
           <Image
             style={styles.avatar}
             source={{
-              uri: params?.author.avatarLarger
+              uri: avatar?.split(':')[0] === 'https' ? avatar : devImageUri + avatar
             }}
           />
           <View style={[styles.avatar, { position: 'absolute', backgroundColor: '#00000070', opacity: 0.5 }]}></View>
@@ -37,6 +32,7 @@ export const EditProfileScreen = ({ navigation, route }: Props): JSX.Element => 
             <CameraSvg />
           </View>
         </TouchableOpacity>
+        <Option ref={sheetRef} />
         <TextField label="Change photo" style={{ color: 'black', marginTop: 10, fontSize: 15 }} />
       </View>
       <TextField label="About you" style={{ color: 'black', fontSize: 14, opacity: 0.5, marginRight: 7, marginTop: 20 }} />

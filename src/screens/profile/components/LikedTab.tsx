@@ -1,5 +1,5 @@
 import { devGifUri } from '@env';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { memo } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
@@ -9,9 +9,8 @@ import { WINDOW_WIDTH } from '../../../device-info';
 import { useFetch } from '../../../handle-api';
 
 export const LikedTab = memo((): JSX.Element => {
-  const isFocused = useIsFocused();
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const { response, loading } = useFetch(PATH.LIKED, isFocused);
+  const { response, loading } = useFetch(PATH.LIKED);
 
   const renderItem = (props: any) => {
     const { item } = props;

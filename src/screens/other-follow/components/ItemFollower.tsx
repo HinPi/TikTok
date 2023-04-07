@@ -39,7 +39,7 @@ export const Item = (props: any) => {
           <TextField label={item.profile.uniqueId} style={[styles.textStyle, { color: '#747474', fontSize: 14 }]} />
         </View>
       </TouchableOpacity>
-      {item.profile.userID !== id ? (
+      {item.profile._id !== id ? (
         isFollow === true ? (
           isFollowMe === true ? (
             <View style={styles.friendsBtn}>

@@ -11,12 +11,9 @@ type Props = NativeStackScreenProps<StackParamList>;
 export const InputScreen = ({ navigation, route }: Props): JSX.Element => {
   const { params } = route;
   const [isChange, setIsChange] = useState(true);
-  const bio = useStore((state) => state.bio);
-  const name = useStore((state) => state.name);
-  const userName = useStore((state) => state.userName);
   const inputRef = useRef<string>(params?.data as string);
   const setDataUser = useStore((state) => state.setDataUser);
-  const { token } = useStore((store) => store.credentials || {});
+  const { token, avatar, bio, name, userName, id } = useStore((store) => store.credentials || {});
   const [loading, setLoading] = useState(false);
   const { patchData } = useStore();
 
@@ -63,11 +60,11 @@ export const InputScreen = ({ navigation, route }: Props): JSX.Element => {
     navigation.goBack();
     switch (params?.name) {
       case 'nickName':
-        return setDataUser({ name: inputRef.current, bio, userName });
+        return setDataUser({ name: inputRef.current, bio, userName, avatar, token, id });
       case 'uniqueId':
-        return setDataUser({ name, userName: inputRef.current, bio });
+        return setDataUser({ name, userName: inputRef.current, bio, avatar, token, id });
       case 'bio':
-        return setDataUser({ name, userName, bio: inputRef.current });
+        return setDataUser({ name, userName, bio: inputRef.current, avatar, token, id });
     }
   };
 

@@ -6,16 +6,6 @@ import { useFetch } from '../../handle-api';
 import { PersonSvg } from '../../svg-view';
 import { Item } from './components/item';
 export const ListUserScreen = (): JSX.Element => {
-  //   const { id } = useStore((store) => store.credentials || {});
-
-  //   useEffect(() => {
-  //     const socket = io(socketUrl);
-  //     socket.emit('user_connect', id);
-  //     return () => {
-  //       socket.disconnect();
-  //     };
-  //   }, []);
-
   const { loading, response } = useFetch(PATH.LISTUSER);
 
   if (loading) return <ActivityIndicator style={styles.loading} size={'large'} color={'black'} />;

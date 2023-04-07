@@ -9,7 +9,7 @@ import { useStore } from '../../store';
 import { TYPOGRAPHY_STYLES } from '../../styles/typography';
 
 export const LoginModal = forwardRef((props, ref?: Ref<BottomSheet>): JSX.Element => {
-  const { login, isLogged } = useStore();
+  const { login } = useStore();
   const snapPoints = useMemo(() => ['100%'], []);
   useEffect(() => {
     configureGoogleSign();

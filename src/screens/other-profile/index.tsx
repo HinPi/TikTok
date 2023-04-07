@@ -68,8 +68,8 @@ const AuthorizedRoutes = ({ route, navigation }: Props): JSX.Element => {
     }
   };
 
-  const handleNavigate = (params?: any) => {
-    navigation.navigate('OtherFollow', params);
+  const handleNavigate = (path: string, params?: any) => {
+    navigation.navigate(path, params);
   };
 
   const handleEvent = () => {
@@ -127,7 +127,7 @@ const AuthorizedRoutes = ({ route, navigation }: Props): JSX.Element => {
           <View style={styles.followContainer}>
             <TouchableOpacity
               style={{ alignItems: 'center' }}
-              onPress={() => handleNavigate({ author: response.profile, name: 'following' })}
+              onPress={() => handleNavigate('OtherFollow', { author: response.profile, name: 'following' })}
             >
               <TextField label={response?.following} style={[styles.text, styles.followNumber]} />
               <TextField label={'Following'} style={[styles.text, styles.followText]} />
@@ -136,7 +136,7 @@ const AuthorizedRoutes = ({ route, navigation }: Props): JSX.Element => {
           <View style={styles.followContainer}>
             <TouchableOpacity
               style={{ alignItems: 'center' }}
-              onPress={() => handleNavigate({ author: response.profile, name: 'follower' })}
+              onPress={() => handleNavigate('OtherFollow', { author: response.profile, name: 'follower' })}
             >
               <TextField label={response?.follower} style={[styles.text, styles.followNumber]} />
               <TextField label={'Follower'} style={[styles.text, styles.followText]} />
@@ -151,7 +151,7 @@ const AuthorizedRoutes = ({ route, navigation }: Props): JSX.Element => {
         </View>
         {isFolow ? (
           <View style={styles.followedLabel}>
-            <TouchableOpacity style={styles.followedBtn}>
+            <TouchableOpacity style={styles.followedBtn} onPress={() => handleNavigate('chat', response.profile)}>
               <TextField label={'Message'} style={[styles.text, styles.followedText]} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.unFollowBtn} onPress={handleFollow}>
@@ -207,7 +207,7 @@ const UnauthorizedRoutes = ({ navigation, route }: Props): JSX.Element => {
   const renderScene = ({ route }: { route: Route }) => {
     switch (route.key) {
       case 'posted':
-        return <PostedTab id={params?.author} />;
+        return <PostedTab id={params?.author} name={response?.profile.uniqueId} />;
       case 'liked':
         return <LikedOtherTab name={response?.profile.uniqueId} />;
       default:

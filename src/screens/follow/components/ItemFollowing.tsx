@@ -12,7 +12,7 @@ import { TYPOGRAPHY_STYLES } from '../../../styles/typography';
 export const Item = (props: any) => {
   const { item } = props;
   const { postData } = useStore();
-  const { token } = useStore((store) => store.credentials || {});
+  const { token, id } = useStore((store) => store.credentials || {});
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const http = item.profile.avatarLarger.split(':')[0];
   const [isFollow, setIsFollow] = useState(true);
@@ -38,33 +38,35 @@ export const Item = (props: any) => {
           <TextField label={item.profile.uniqueId} style={[styles.textStyle, { color: '#747474', fontSize: 14 }]} />
         </View>
       </TouchableOpacity>
-      {isFollow === true ? (
-        item.isFollowMe === true ? (
-          <View style={styles.friendsBtn}>
-            <TouchableOpacity style={styles.friendsLabel} onPress={handleFollow}>
-              <TextField label={'Friends'} style={styles.text} />
+      {item.profile._id !== id ? (
+        isFollow === true ? (
+          item.isFollowMe === true ? (
+            <View style={styles.friendsBtn}>
+              <TouchableOpacity style={styles.friendsLabel} onPress={handleFollow}>
+                <TextField label={'Friends'} style={styles.text} />
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.unFollowBtn}>
+              <TouchableOpacity style={styles.unFollowLabel} onPress={handleFollow}>
+                <TextField label={'Following'} style={styles.text} />
+              </TouchableOpacity>
+            </View>
+          )
+        ) : item.isFollowMe === true ? (
+          <View style={styles.followBtn}>
+            <TouchableOpacity style={styles.followLabel} onPress={handleFollow}>
+              <TextField label={'Follow back'} style={[styles.text, { color: WHITE }]} />
             </TouchableOpacity>
           </View>
         ) : (
-          <View style={styles.unFollowBtn}>
-            <TouchableOpacity style={styles.unFollowLabel} onPress={handleFollow}>
-              <TextField label={'Following'} style={styles.text} />
+          <View style={styles.followBtn}>
+            <TouchableOpacity style={styles.followLabel} onPress={handleFollow}>
+              <TextField label={'Follow'} style={[styles.text, { color: WHITE }]} />
             </TouchableOpacity>
           </View>
         )
-      ) : item.isFollowMe === true ? (
-        <View style={styles.followBtn}>
-          <TouchableOpacity style={styles.followLabel} onPress={handleFollow}>
-            <TextField label={'Follow back'} style={[styles.text, { color: WHITE }]} />
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <View style={styles.followBtn}>
-          <TouchableOpacity style={styles.followLabel} onPress={handleFollow}>
-            <TextField label={'Follow'} style={[styles.text, { color: WHITE }]} />
-          </TouchableOpacity>
-        </View>
-      )}
+      ) : null}
     </View>
   );
 };

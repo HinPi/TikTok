@@ -1,8 +1,6 @@
 import { WINDOW_WIDTH } from '@gorhom/bottom-sheet';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, BackHandler, StyleSheet, ToastAndroid } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { ActivityIndicator, StyleSheet } from 'react-native';
 import { Route, TabBar, TabView } from 'react-native-tab-view';
 import { TextField } from '../../components/text-field';
 import { WHITE } from '../../styles/color';
@@ -11,38 +9,18 @@ import { FollowingScreen } from './components/FollowingTab';
 import { ForYouScreen } from './components/ForYouTab';
 
 export const HomeScreen = (): JSX.Element => {
-  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const [backPressCount, setBackPressCount] = useState(0);
   const [index, setIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const previousIndexRef = useRef(0);
   const [routes] = useState([
     { key: 'first', title: 'Following' },
     { key: 'second', title: 'For you' }
   ]);
 
-  const handleBackPress = useCallback(() => {
-    if (backPressCount === 0) {
-      setBackPressCount((prevCount) => prevCount + 1);
-      setTimeout(() => setBackPressCount(0), 2000);
-      ToastAndroid.show('Press one more time to exit', ToastAndroid.SHORT);
-    } else if (backPressCount === 1) {
-      BackHandler.exitApp();
-    }
-    return true;
-  }, [backPressCount]);
-
-  useEffect(() => {
-    // navigation.addListener('beforeRemove', (e) => {
-    //     e.preventDefault()
-
-    // })
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-    return () => backHandler.remove();
-  }, [handleBackPress]);
-
   const renderScene = ({ route }: { route: Route }) => {
     switch (route.key) {
       case 'second':
-        return <ForYouScreen />;
+        return <ForYouScreen isActive={index === 1} />;
       case 'first':
         return <FollowingScreen />;
       default:
@@ -56,7 +34,7 @@ export const HomeScreen = (): JSX.Element => {
 
   return (
     <TabView
-      lazy
+      lazy={true}
       navigationState={{ index, routes }}
       renderScene={renderScene}
       onIndexChange={setIndex}

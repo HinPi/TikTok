@@ -13,7 +13,7 @@ export const Item = (props: any) => {
   const { item } = props;
   const { postData } = useStore();
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const { token } = useStore((store) => store.credentials || {});
+  const { token, id } = useStore((store) => store.credentials || {});
   const http = item.profile.avatarLarger.split(':')[0];
   const [isFollow, setisFollow] = useState(item.isFollowing);
 
@@ -38,19 +38,21 @@ export const Item = (props: any) => {
           <TextField label={item.profile.uniqueId} style={[styles.textStyle, { color: '#747474', fontSize: 14 }]} />
         </View>
       </TouchableOpacity>
-      {item.isFollowMe === isFollow ? (
-        <View style={styles.friendsBtn}>
-          <TouchableOpacity style={styles.friendsLabel} onPress={handleFollow}>
-            <TextField label={'Friends'} style={styles.text} />
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <View style={styles.followBtn}>
-          <TouchableOpacity style={styles.followLabel} onPress={handleFollow}>
-            <TextField label={'Follow back'} style={[styles.text, { color: WHITE }]} />
-          </TouchableOpacity>
-        </View>
-      )}
+      {item.profile._id !== id ? (
+        item.isFollowMe === isFollow ? (
+          <View style={styles.friendsBtn}>
+            <TouchableOpacity style={styles.friendsLabel} onPress={handleFollow}>
+              <TextField label={'Friends'} style={styles.text} />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.followBtn}>
+            <TouchableOpacity style={styles.followLabel} onPress={handleFollow}>
+              <TextField label={'Follow back'} style={[styles.text, { color: WHITE }]} />
+            </TouchableOpacity>
+          </View>
+        )
+      ) : null}
     </View>
   );
 };

@@ -2,7 +2,7 @@ import { devImageUri } from '@env';
 import BottomSheet, { WINDOW_WIDTH } from '@gorhom/bottom-sheet';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { ActivityIndicator, Image, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { Route, TabBar, TabView } from 'react-native-tab-view';
 import { TextField } from '../../components/text-field';
@@ -29,10 +29,7 @@ const AuthorizedRoutes = () => {
   const [routes] = useState([{ key: 'upload' }, { key: 'myvideo' }, { key: 'liked' }]);
   const [status, setStatus] = useState(false);
   const { response, loading } = useFetch(PATH.PROFILE);
-  const bio = useStore((state) => state.bio);
-  const name = useStore((state) => state.name);
-  const userName = useStore((state) => state.userName);
-  const setDataUser = useStore((state) => state.setDataUser);
+  const { avatar, bio, name, userName, id } = useStore((store) => store.credentials || {});
 
   const renderScene = ({ route }: { route: Route }) => {
     switch (route.key) {
@@ -46,10 +43,6 @@ const AuthorizedRoutes = () => {
         return null;
     }
   };
-
-  useEffect(() => {
-    setDataUser({ bio: response?.profile.bio, name: response?.profile.nickName, userName: response?.profile.uniqueId });
-  }, [response]);
 
   const getTabBarIcon = (route: Route, focused: boolean) => {
     switch (route.key) {
@@ -106,9 +99,7 @@ const AuthorizedRoutes = () => {
         <TextField label={name} style={[styles.text, styles.textHeader]} />
         <View style={styles.menuIcon}>
           <TouchableOpacity
-            onPress={() =>
-              handleNavigate('Setting', { provider: response?.profile.provider, uniqueId: response?.profile.uniqueId })
-            }
+            onPress={() => handleNavigate('Setting', { provider: response?.profile.provider, uniqueId: userName })}
           >
             <MenuSvg />
           </TouchableOpacity>
@@ -119,7 +110,7 @@ const AuthorizedRoutes = () => {
           <Image
             style={styles.avatar}
             source={{
-              uri: response?.profile.avatarLarger
+              uri: avatar?.split(':')[0] === 'https' ? avatar : devImageUri + avatar
             }}
           />
         </View>

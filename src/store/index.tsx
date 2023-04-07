@@ -9,6 +9,7 @@ interface AppCredentials {
   avatar?: string;
   token?: string;
   id?: string;
+  bio?: string;
 }
 
 type infoLogin = {
@@ -21,11 +22,8 @@ interface Store extends AppCredentials {
   credentials?: AppCredentials;
   isLogged?: boolean;
   isConnected?: boolean;
-  bio?: string;
-  name?: string;
-  userName?: string;
   setCredentials: (credentials: AppCredentials) => void;
-  setDataUser: (props: { bio?: string; name?: string; userName?: string }) => void;
+  setDataUser: (props: { bio?: string; name?: string; userName?: string; avatar?: string; token?: string; id?: string }) => void;
   login: (params: infoLogin) => Promise<void>;
   logout: () => Promise<void>;
   postData: (token?: string, path?: string, params?: { message?: string }) => Promise<void>;
@@ -39,8 +37,26 @@ export const useStore = create<Store>((set) => ({
   setCredentials: (credentials: AppCredentials) => {
     set((state) => ({ ...state, credentials, isLogged: true }));
   },
-  setDataUser: (props: { bio?: string; name?: string; userName?: string }) => {
-    set((state) => ({ ...state, bio: props.bio, name: props.name, userName: props.userName }));
+  setDataUser: (props: { bio?: string; name?: string; userName?: string; avatar?: string; token?: string; id?: string }) => {
+    setItem('credentials', {
+      bio: props.bio,
+      name: props.name,
+      userName: props.userName,
+      avatar: props.avatar,
+      token: props.token,
+      id: props.id
+    });
+    set((state) => ({
+      ...state,
+      credentials: {
+        bio: props.bio,
+        name: props.name,
+        userName: props.userName,
+        avatar: props.avatar,
+        token: props.token,
+        id: props.id
+      }
+    }));
   },
   login: async (params: infoLogin) => {
     try {
@@ -51,10 +67,24 @@ export const useStore = create<Store>((set) => ({
       });
       const resJson = await response.json();
 
-      setItem('credentials', { token: resJson.accessToken, avatar: params.imgURL, name: params.name, id: params.userID });
+      setItem('credentials', {
+        token: resJson.accessToken,
+        avatar: resJson.profile.avatarLarger,
+        bio: resJson.profile.bio,
+        name: resJson.profile.nickName,
+        userName: resJson.profile.uniqueId,
+        id: resJson.profile._id
+      });
       set((state) => ({
         ...state,
-        credentials: { token: resJson.accessToken, avatar: params.imgURL, name: params.name, id: params.userID },
+        credentials: {
+          token: resJson.accessToken,
+          avatar: resJson.profile.avatarLarger,
+          bio: resJson.profile.bio,
+          name: resJson.profile.nickName,
+          userName: resJson.profile.uniqueId,
+          id: resJson.profile._id
+        },
         isLogged: true
       }));
     } catch (error) {
@@ -93,9 +123,6 @@ export const useStore = create<Store>((set) => ({
       ...state,
       isLogged: false,
       token: undefined,
-      avatar: undefined,
-      name: undefined,
-      id: undefined,
       credentials: undefined
     }));
   }

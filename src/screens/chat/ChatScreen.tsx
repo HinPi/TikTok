@@ -14,7 +14,7 @@ export const ChatScreen = ({ route }: Props): JSX.Element => {
   const { params } = route;
   const http = params?.avatarLarger?.split(':')[0];
   const [messages, setMessages] = useState<any>([]);
-  const { id, token } = useStore((store) => store.credentials || {});
+  const { token } = useStore((store) => store.credentials || {});
   const socket = useMemo(
     () =>
       io(socketUrl, {
@@ -91,8 +91,6 @@ export const ChatScreen = ({ route }: Props): JSX.Element => {
     socket.emit('send_message', { messages: messages[0].text, receiver: params?._id });
   }, []);
 
-  console.log(messages);
-
   const renderSend = (props: SendProps<never>) => {
     const { text } = props;
     return (
@@ -109,7 +107,7 @@ export const ChatScreen = ({ route }: Props): JSX.Element => {
       messages={messages}
       onSend={(messages: []) => onSend(messages)}
       user={{
-        _id: id as string
+        _id: 1
       }}
       keyboardShouldPersistTaps={'handled'}
       alwaysShowSend

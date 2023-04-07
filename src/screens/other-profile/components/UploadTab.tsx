@@ -1,7 +1,9 @@
 import { devGifUri } from '@env';
 import { WINDOW_WIDTH } from '@gorhom/bottom-sheet';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { memo } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { TextField } from '../../../components/text-field';
 import { PATH } from '../../../constants';
@@ -11,12 +13,16 @@ import { TYPOGRAPHY_STYLES } from '../../../styles/typography';
 export const PostedTab = memo((props: any): JSX.Element => {
   const { id, name } = props;
   const { response, loading } = useFetch(`${PATH.VIDEO}/${id}`);
-
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const renderItem = (props: any) => {
     const { item } = props;
     return (
       <View style={{ marginRight: 1, marginVertical: 0.5 }} key={item._id}>
-        <FastImage source={{ uri: devGifUri + item?.gifUrl }} style={{ width: WINDOW_WIDTH / 3, height: WINDOW_WIDTH / 3 }} />
+        <TouchableWithoutFeedback
+          onPress={() => navigation.navigate('FlatList', { paths: `${PATH.VIDEO}/${id}`, index: props.index, isLike: false })}
+        >
+          <FastImage source={{ uri: devGifUri + item?.gifUrl }} style={{ width: WINDOW_WIDTH / 3, height: WINDOW_WIDTH / 3 }} />
+        </TouchableWithoutFeedback>
       </View>
     );
   };

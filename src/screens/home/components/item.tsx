@@ -114,7 +114,7 @@ export const Item = memo(({ data, isActive }: any): JSX.Element => {
             <TouchableOpacity>
               <View style={styles.iconContainer}>
                 <ShareSvg />
-                <Text style={styles.statsLabel}>10</Text>
+                <Text style={{ color: WHITE }}>Share</Text>
               </View>
             </TouchableOpacity>
           </View>

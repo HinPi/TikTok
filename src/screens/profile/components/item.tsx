@@ -14,7 +14,7 @@ import { ModalComment } from '../../home/components/comment';
 
 export const FlatListItem = memo(({ data, isActive, isLike: liked }: any): JSX.Element => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const { videoUrl, author, likeCount, commentCount, _id } = data;
+  const { videoUrl, author, likeCount, commentCount, _id, desc } = data;
   const http = author.avatarLarger.split(':')[0];
   const sheetRef = useRef<BottomSheet>(null);
   const [paused, setPaused] = useState<boolean>(false);
@@ -111,7 +111,7 @@ export const FlatListItem = memo(({ data, isActive, isLike: liked }: any): JSX.E
           <View style={styles.bottomContainer}>
             <View>
               <Text style={styles.handle}>{author.nickName}</Text>
-              <Text style={styles.description}>Ghi vô</Text>
+              {desc ? <Text style={styles.description}>{desc || ''}</Text> : null}
               <View style={styles.songRow}>
                 <MusicSvg />
                 <Text numberOfLines={1} style={styles.songName}>
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',
-    height: WINDOW_HEIGHT - 48
+    height: WINDOW_HEIGHT
   },
   uiContainer: {
     height: '100%',
