@@ -19,15 +19,26 @@ import { NotificationScreen } from '../screens/notification';
 import { OtherFollowScreen } from '../screens/other-follow';
 import { OtherProfile } from '../screens/other-profile';
 import { ProfileScreen } from '../screens/profile';
+import { EditProfileScreen } from '../screens/profile/EditProfile';
 import { FlatListScreen } from '../screens/profile/components/FlatList';
 import { InputScreen } from '../screens/profile/components/input';
-import { EditProfileScreen } from '../screens/profile/EditProfile';
 import { SettingScreen } from '../screens/setting-privacy';
 import { UploadScreen } from '../screens/upload';
 import { useStore } from '../store';
 import { TYPOGRAPHY_STYLES } from '../styles/typography';
 import { DiscoverIconSvg, HomeIconSvg, InboxIconSvg, PersonSvg, RecordVideo } from '../svg-view';
 const { VideoEditorModule } = NativeModules;
+
+const linking = {
+  prefixes: ['videocalling://'],
+  config: {
+    screens: {
+      meetingscreen: {
+        path: `meetingscreen/:token/:meetingId`
+      }
+    }
+  }
+};
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -58,7 +69,7 @@ export const AppRouting = () => {
   }, []);
 
   return (
-    <NavigationContainer theme={theme}>
+    <NavigationContainer theme={theme} linking={linking}>
       <AuthorizedRoutes />
     </NavigationContainer>
   );
