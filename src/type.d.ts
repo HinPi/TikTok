@@ -8,4 +8,7 @@ declare module '@env' {
   export const devImageUri: string;
   export const devGifUri: string;
   export const socketUrl: string;
+  export const API_BASE_URL: string;
+  export const VIDEOSDK_TOKEN: string;
+  export const FCM_SERVER_URL: string;
 }

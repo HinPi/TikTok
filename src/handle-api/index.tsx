@@ -1,4 +1,4 @@
-import { devApiUrl } from '@env';
+import { API_BASE_URL, FCM_SERVER_URL, VIDEOSDK_TOKEN, devApiUrl } from '@env';
 import { useEffect, useState } from 'react';
 import RNFetchBlob from 'rn-fetch-blob';
 import { useStore } from '../store';
@@ -31,4 +31,51 @@ export const useFetch = (path: string, isFocused?: boolean): Response => {
   return state;
 };
 
-//300000ms
+export const getToken = () => {
+  return VIDEOSDK_TOKEN;
+};
+
+export const createMeeting = async ({ token }: { token: string }) => {
+  const res = await fetch(`${API_BASE_URL}/rooms`, {
+    method: 'POST',
+    headers: {
+      authorization: token,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({})
+  });
+
+  const { roomId } = await res.json();
+  return roomId;
+};
+
+export const initiateCall = async ({ callerInfo, calleeInfo, videoSDKInfo }: any) => {
+  await fetch(`${FCM_SERVER_URL}/initiate-call`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      callerInfo,
+      calleeInfo,
+      videoSDKInfo
+    })
+  })
+    .then((response) => {
+      console.log(' RESP', response);
+    })
+    .catch((error) => console.error('error', error));
+};
+
+export const updateCallStatus = async ({ callerInfo, type }: any) => {
+  await fetch(`${FCM_SERVER_URL}/update-call`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      callerInfo,
+      type
+    })
+  })
+    .then((response) => {
+      console.log('##RESP', response);
+    })
+    .catch((error) => console.error('error', error));
+};

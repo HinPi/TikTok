@@ -46,6 +46,7 @@
     "react-native-tab-view": "^3.4.0",
     "react-native-thumbnail-video": "^0.1.2",
     "react-native-toast-message": "^2.1.5",
+    "react-native-uuid": "^2.0.1",
     "react-native-vector-icons": "^9.2.0",
     "react-native-video": "^6.0.0-alpha.3",
     "react-native-voip-push-notification": "^3.3.1",

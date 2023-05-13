@@ -7,6 +7,7 @@ import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/
 import React, { Fragment, useEffect, useRef } from 'react';
 import { Image, NativeModules, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
+import RNCallKeep from 'react-native-callkeep';
 import { TextField } from '../components/text-field';
 import { DEFAULT_HEIGHT, ROUTE_KEYS } from '../constants';
 import { getItem } from '../device-info';
@@ -66,6 +67,23 @@ export const AppRouting = () => {
     };
 
     prepare();
+  }, []);
+
+  useEffect(() => {
+    const options: any = {
+      ios: {
+        appName: 'VideoSDK'
+      },
+      android: {
+        alertTitle: 'Permissions required',
+        alertDescription: 'This application needs to access your phone accounts',
+        cancelButton: 'Cancel',
+        okButton: 'ok',
+        imageName: 'phone_account_icon'
+      }
+    };
+    RNCallKeep.setup(options);
+    RNCallKeep.setAvailable(true);
   }, []);
 
   return (
