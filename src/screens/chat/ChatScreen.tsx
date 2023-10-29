@@ -2,31 +2,77 @@ import { devImageUri, socketUrl } from '@env';
 import firestore from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Linking, Platform, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { Image, Linking, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { Bubble, GiftedChat, InputToolbar, Send, SendProps } from 'react-native-gifted-chat';
-import { Toast } from 'react-native-toast-message/lib/src/Toast';
 import { setAdjustPan, setAdjustResize } from 'rn-android-keyboard-adjust';
 import { io } from 'socket.io-client';
 import { generateUUID } from '../../constants';
 import { createMeeting, getToken, initiateCall, updateCallStatus } from '../../handle-api';
+import { SCREEN_NAMES } from '../../navigators/screenNames';
 import { useStore } from '../../store';
-import { SendSvg } from '../../svg-view';
+import { CallEnd, SendSvg, VideoIconSvg } from '../../svg-view';
 import incomingVideoCall from '../../utils/incoming-video-call';
 type Props = NativeStackScreenProps<StackParamList>;
 
-export const ChatScreen = ({ route }: Props): JSX.Element => {
+export const ChatScreen = ({ route, navigation }: Props): JSX.Element => {
   const { params } = route;
   const http = params?.avatarLarger?.split(':')[0];
   const [messages, setMessages] = useState<any>([]);
   const { token, userName, id: idCaller } = useStore((store) => store.credentials || {});
-  const [id, setId] = useState('');
   const [firebaseUserConfig, setfirebaseUserConfig] = useState({});
-  const [isCalling, setisCalling] = useState(false);
   const [videosdkToken, setVideosdkToken] = useState('');
   const [videosdkMeeting, setVideosdkMeeting] = useState('');
   const videosdkTokenRef = useRef('');
   const videosdkMeetingRef = useRef('');
+  const [isCalling, setisCalling] = useState(false);
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={{ marginRight: 20 }}>
+          <TouchableOpacity
+            onPress={async () => {
+              if (params?._id) {
+                const data = await getCallee(params?._id as number);
+                if (data) {
+                  if (data.length === 0) {
+                    console.log('CallerId Does not Match');
+                  } else {
+                    console.log('CallerId Match!');
+                    const { token, platform } = data[0]?.data();
+                    initiateCall({
+                      callerInfo: {
+                        name: userName,
+                        ...firebaseUserConfig
+                      },
+                      calleeInfo: {
+                        token,
+                        platform
+                      },
+                      videoSDKInfo: {
+                        token: videosdkTokenRef.current,
+                        meetingId: videosdkMeetingRef.current
+                      }
+                    });
+                    setisCalling(true);
+                  }
+                }
+              } else {
+                console.log('Please provide CallerId');
+              }
+              console.log({
+                name: userName,
+                ...firebaseUserConfig
+              });
+            }}
+          >
+            <VideoIconSvg height={25} width={25} />
+          </TouchableOpacity>
+        </View>
+      ),
+      headerShown: !isCalling
+    });
+  }, [isCalling]);
 
   useEffect(() => {
     async function getFCMtoken() {
@@ -69,10 +115,9 @@ export const ChatScreen = ({ route }: Props): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = messaging().onMessage((remoteMessage: any) => {
+    const unsubscribe = messaging().onMessage((remoteMessage) => {
       const { callerInfo, videoSDKInfo, type } = JSON.parse(remoteMessage.data.info);
-      console.log(remoteMessage);
-
+      console.log(type, '================');
       switch (type) {
         case 'CALL_INITIATED':
           const incomingCallAnswer = ({ callUUID }: { callUUID: number }) => {
@@ -81,9 +126,9 @@ export const ChatScreen = ({ route }: Props): JSX.Element => {
               type: 'ACCEPTED'
             });
             incomingVideoCall.endIncomingcallAnswer();
-            setisCalling(false);
+            // setisCalling(false);
             Linking.openURL(`videocalling://meetingscreen/${videoSDKInfo.token}/${videoSDKInfo.meetingId}`).catch((err) => {
-              Toast.show(err);
+              console.log(`Error`, err);
             });
           };
 
@@ -98,19 +143,21 @@ export const ChatScreen = ({ route }: Props): JSX.Element => {
           break;
         case 'ACCEPTED':
           setisCalling(false);
-          //   navigation.navigate(SCREEN_NAMES.Meeting, {
-          //     name: "Person B",
-          //     token: videosdkTokenRef.current,
-          //     meetingId: videosdkMeetingRef.current,
-          //   });
+          navigation.navigate(SCREEN_NAMES.Meeting, {
+            name: params?.uniqueId,
+            token: videosdkTokenRef.current,
+            meetingId: videosdkMeetingRef.current
+          });
           break;
         case 'REJECTED':
+          console.log('Call Rejected');
           setisCalling(false);
           break;
         case 'DISCONNECT':
           Platform.OS === 'ios' ? incomingVideoCall.endAllCall() : incomingVideoCall.endIncomingcallAnswer();
           break;
         default:
+          console.log('Call Could not placed');
       }
     });
 
@@ -225,69 +272,100 @@ export const ChatScreen = ({ route }: Props): JSX.Element => {
     );
   };
 
-  const getCallee = async (num: number) => {
-    const querySnapshot = await firestore().collection('users').where('callerId', '==', num.toString()).get();
-    return querySnapshot.docs.map((doc) => {
-      return doc;
-    });
-  };
-
-  return (
-    <>
-      <GiftedChat
-        messages={messages}
-        onSend={(messages: []) => onSend(messages)}
-        user={{
-          _id: 1
-        }}
-        keyboardShouldPersistTaps={'handled'}
-        alwaysShowSend
-        renderSend={renderSend}
-        renderBubble={renderBubble}
-        renderInputToolbar={renderInputToolbar}
-        listViewProps={{
-          style: {
-            backgroundColor: '#f6f6f6'
-          }
-        }}
-      />
-      <TouchableOpacity
-        onPress={async () => {
-          if (params?._id) {
-            const data = await getCallee(params?._id as number);
-            if (data) {
-              if (data.length === 0) {
-              } else {
-                const { token, platform, APN } = data[0]?.data();
-                initiateCall({
-                  callerInfo: {
-                    userName,
-                    ...firebaseUserConfig
-                  },
-                  calleeInfo: {
-                    token,
-                    platform
-                  },
-                  videoSDKInfo: {
-                    token: videosdkTokenRef.current,
-                    meetingId: videosdkMeetingRef.current
-                  }
-                });
-                setisCalling(true);
-              }
-            }
-          } else {
-          }
-        }}
+  return !isCalling ? (
+    <GiftedChat
+      messages={messages}
+      onSend={(messages: []) => onSend(messages)}
+      user={{
+        _id: 1
+      }}
+      keyboardShouldPersistTaps={'handled'}
+      alwaysShowSend
+      renderSend={renderSend}
+      renderBubble={renderBubble}
+      renderInputToolbar={renderInputToolbar}
+      listViewProps={{
+        style: {
+          backgroundColor: '#f6f6f6'
+        }
+      }}
+    />
+  ) : (
+    <View style={{ flex: 1, justifyContent: 'space-around' }}>
+      <View
         style={{
-          height: 50,
-          backgroundColor: '#5568FE',
+          padding: 35,
           justifyContent: 'center',
           alignItems: 'center',
-          borderRadius: 12,
-          marginTop: 16
+          borderRadius: 14
         }}
-      ></TouchableOpacity>
-    </>
+      >
+        <Image
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 50,
+            borderWidth: 2,
+            borderColor: 'rgba(158, 150, 150, .5)'
+          }}
+          source={{
+            uri: http === 'https' ? params?.avatarLarger : devImageUri + params?.avatarLarger
+          }}
+        />
+        <Text
+          style={{
+            fontSize: 36,
+            marginTop: 12,
+            color: 'black'
+          }}
+        >
+          {params?.uniqueId}
+        </Text>
+        <Text
+          style={{
+            fontSize: 16,
+            color: '#D0D4DD'
+          }}
+        >
+          Calling to...
+        </Text>
+      </View>
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <TouchableOpacity
+          onPress={async () => {
+            const data = await getCallee(params?._id as number);
+            if (data) {
+              updateCallStatus({
+                callerInfo: data[0]?.data(),
+                type: 'DISCONNECT'
+              });
+              setisCalling(false);
+            }
+          }}
+          style={{
+            backgroundColor: '#FF5D5D',
+            borderRadius: 30,
+            height: 60,
+            aspectRatio: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <CallEnd width={50} height={12} />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
+};
+
+export const getCallee = async (num: number) => {
+  const querySnapshot = await firestore().collection('users').where('callerId', '==', num.toString()).get();
+  return querySnapshot.docs.map((doc) => {
+    return doc;
+  });
 };

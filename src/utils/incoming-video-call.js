@@ -82,4 +82,4 @@ class IncomingCall {
   };
 }
 
-export default Incomingvideocall = new IncomingCall();
+export default new IncomingCall();

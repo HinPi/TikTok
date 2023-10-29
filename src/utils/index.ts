@@ -19,6 +19,7 @@ export const formatDateTime = (timeString?: Date | string): string => {
 export const timeForNotification = (timeString?: string): string => {
   if (isNullOrUndefined(timeString)) return '';
   if (dayjs(timeString).isAfter(dayjs(new Date()).add(-1, 'day'))) return moment(timeString).fromNow().split(' ago')[0];
+  if (dayjs(timeString).isAfter(dayjs(new Date()).add(-1, 'year'))) return moment(timeString).format('YYYY-MM-DD');
   return dayjs(timeString).format(DATE_FORMATS.DD_MM);
 };
 

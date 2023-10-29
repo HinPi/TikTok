@@ -17,13 +17,12 @@ const firebaseListener = async (remoteMessage) => {
 
   if (type === 'CALL_INITIATED') {
     const incomingCallAnswer = ({ callUUID }) => {
-      //   Incomingvideocall.backToForeground();
       updateCallStatus({
         callerInfo,
         type: 'ACCEPTED'
       });
       Incomingvideocall.endIncomingcallAnswer(callUUID);
-      Linking.openURL(`videocalling://meetingscreen/${videoSDKInfo.token}/${videoSDKInfo.meetingId}`).catch((err) => {
+      Linking.openURL(`videocalling://accept/${videoSDKInfo.token}/${videoSDKInfo.meetingId}`).catch((err) => {
         console.log(err);
       });
     };
@@ -34,8 +33,7 @@ const firebaseListener = async (remoteMessage) => {
     };
 
     Incomingvideocall.configure(incomingCallAnswer, endIncomingCall);
-    Incomingvideocall.displayIncomingCall(callerInfo.name);
-    Incomingvideocall.backToForeground();
+    Incomingvideocall.displayIncomingCall(callerInfo.userName);
   }
 };
 

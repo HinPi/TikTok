@@ -67,8 +67,6 @@ public class MainApplication extends Application implements ReactApplication {
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
 
-    // Initialize Banuba VE UI SDK
-    new BanubaVideoEditorSDK().initialize(this);
   }
 
   /**

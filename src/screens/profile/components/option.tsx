@@ -1,23 +1,11 @@
 import BottomSheet, { BottomSheetBackdrop, TouchableOpacity } from '@gorhom/bottom-sheet';
 import { Portal } from '@gorhom/portal';
-import React, { forwardRef, Ref, useMemo } from 'react';
+import React, { Ref, forwardRef, useMemo } from 'react';
 import { View } from 'react-native';
-import ImageCropPicker from 'react-native-image-crop-picker';
 import { TextField } from '../../../components/text-field';
-('react-native-image-crop-picker');
 
 export const Option = forwardRef((props, ref?: Ref<BottomSheet>): JSX.Element => {
   const snapPoints = useMemo(() => ['24%'], []);
-
-  const openGallery = () => {
-    ImageCropPicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: true
-    }).then((image) => {
-      console.log(image);
-    });
-  };
 
   return (
     <Portal>
@@ -34,7 +22,7 @@ export const Option = forwardRef((props, ref?: Ref<BottomSheet>): JSX.Element =>
               <TextField label="Take a photo" style={{ fontSize: 14, fontWeight: '700', color: 'black', textAlign: 'center' }} />
             </TouchableOpacity>
             <View style={{ borderBottomWidth: 1, borderColor: 'rgba(158, 150, 150, .2)' }}></View>
-            <TouchableOpacity style={{ paddingVertical: 15 }} onPress={openGallery}>
+            <TouchableOpacity style={{ paddingVertical: 15 }} onPress={() => {}}>
               <TextField
                 label="Select from gallery"
                 style={{ fontSize: 14, fontWeight: '700', color: 'black', textAlign: 'center' }}

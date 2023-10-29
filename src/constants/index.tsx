@@ -15,7 +15,9 @@ export const ROUTE_KEYS = Object.freeze({
   LISTUSER: 'listUser',
   CHAT: 'chat',
   EDIT: 'edit',
-  INPUT: 'input'
+  INPUT: 'input',
+  CALLING: 'calling',
+  ACCEPT: 'accept'
 });
 
 export const PATH = {

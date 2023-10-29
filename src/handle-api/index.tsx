@@ -7,6 +7,7 @@ type Response = { response?: any; loading?: boolean };
 export const useFetch = (path: string, isFocused?: boolean): Response => {
   const { token } = useStore((store) => store.credentials || {});
   const [state, setState] = useState<Response>({});
+  console.log(devApiUrl + path);
   useEffect(() => {
     const fetchData = async () => {
       setState({ loading: true });
@@ -60,7 +61,7 @@ export const initiateCall = async ({ callerInfo, calleeInfo, videoSDKInfo }: any
     })
   })
     .then((response) => {
-      console.log(' RESP', response);
+      //   console.log(' RESP', response);
     })
     .catch((error) => console.error('error', error));
 };
@@ -75,7 +76,7 @@ export const updateCallStatus = async ({ callerInfo, type }: any) => {
     })
   })
     .then((response) => {
-      console.log('##RESP', response);
+      //   console.log('##RESP', response);
     })
     .catch((error) => console.error('error', error));
 };

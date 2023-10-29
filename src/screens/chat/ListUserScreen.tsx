@@ -7,7 +7,6 @@ import { PersonSvg } from '../../svg-view';
 import { Item } from './components/item';
 export const ListUserScreen = (): JSX.Element => {
   const { loading, response } = useFetch(PATH.LISTUSER);
-
   if (loading) return <ActivityIndicator style={styles.loading} size={'large'} color={'black'} />;
   return response?.length === 0 ? (
     <View style={styles.container}>

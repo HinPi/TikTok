@@ -96,7 +96,7 @@ const AuthorizedRoutes = () => {
         </TouchableOpacity>
       </Modal>
       <View style={styles.headerContainer}>
-        <TextField label={name} style={[styles.text, styles.textHeader]} />
+        <TextField label={name} style={{ color: 'black' }} />
         <View style={styles.menuIcon}>
           <TouchableOpacity
             onPress={() => handleNavigate('Setting', { provider: response?.profile.provider, uniqueId: userName })}

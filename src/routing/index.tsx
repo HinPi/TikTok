@@ -5,12 +5,14 @@ import { DefaultTheme, NavigationContainer, Theme } from '@react-navigation/nati
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
 import React, { Fragment, useEffect, useRef } from 'react';
-import { Image, NativeModules, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, NativeModules, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import RNCallKeep from 'react-native-callkeep';
 import { TextField } from '../components/text-field';
 import { DEFAULT_HEIGHT, ROUTE_KEYS } from '../constants';
 import { getItem } from '../device-info';
+import { SCREEN_NAMES } from '../navigators/screenNames';
+import Meeting from '../scenes/meeting';
 import { ChatScreen } from '../screens/chat/ChatScreen';
 import { ListUserScreen } from '../screens/chat/ListUserScreen';
 import { FollowerScreen } from '../screens/follow';
@@ -30,6 +32,17 @@ import { TYPOGRAPHY_STYLES } from '../styles/typography';
 import { DiscoverIconSvg, HomeIconSvg, InboxIconSvg, PersonSvg, RecordVideo } from '../svg-view';
 const { VideoEditorModule } = NativeModules;
 
+const LICENSE_TOKEN =
+  'BB/DkXPzOx1M8X1uY9eRSDRKfl6KoEI4M7W1GH3HmBnIrkvZ5UFkfyXBArfdDPJ+ruILLhDjOrIbQji4RQLoFqZ6zIvTZOOVAcdrM/qGgzdNiv1jLHq12mexlUOOm7mxDBeuccYFsN5AggiYDzhEQAD42AxMTvFOvMP+3tmO8h9yOzUbFjK4AlOFL0jWE703NrxoOfEsvdyOLdrr1S/OMA58flD8EOy8WRrUnnjS/xG/Halpgo3/YpBWtoxZp2Pp2Hs/r+Id2/7WwqUx4N3+g75l5B1UwBsQv73urcNXlx4AeW+3p5opSq9L4TGg0+ZrRBvzffK5uUkZyaDTNmyca7Bxn4Xq9RAcNUtdijPckDB9Z1kGxCTsnEtYif1xEk0tEfAfowi5yzbo7N2XajwXILQu8/PoWp3nRxZ4o59cfcl41AUXiUae07/ufUxnGtPJKFjArbVAGuHmMpNm0QEoxYn3skld5smlyGtEI+M88Eq55ldrV3XreiUyyuUMtVMXCHYJAYd371r/WqrZ3zrEJuHFXR9pLUVBPpdJ';
+
+const ERR_SDK_NOT_INITIALIZED_CODE = 'ERR_VIDEO_EDITOR_NOT_INITIALIZED';
+const ERR_SDK_NOT_INITIALIZED_MESSAGE =
+  'Banuba Video Editor SDK is not initialized: license token is unknown or incorrect.\nPlease check your license token or contact Banuba';
+
+const ERR_LICENSE_REVOKED_CODE = 'ERR_VIDEO_EDITOR_LICENSE_REVOKED';
+const ERR_LICENSE_REVOKED_MESSAGE =
+  'License is revoked or expired. Please contact Banuba https://www.banuba.com/faq/kb-tickets/new';
+
 const linking = {
   prefixes: ['videocalling://'],
   config: {
@@ -41,15 +54,41 @@ const linking = {
   }
 };
 
+function initVideoEditor() {
+  VideoEditorModule.initVideoEditor(LICENSE_TOKEN);
+}
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 async function startIosVideoEditor() {
+  initVideoEditor();
   return await VideoEditorModule.openVideoEditor();
 }
 
+async function startIosVideoEditorPIP() {
+  initVideoEditor();
+  return await VideoEditorModule.openVideoEditorPIP();
+}
+
+async function startIosVideoEditorTrimmer() {
+  initVideoEditor();
+  return await VideoEditorModule.openVideoEditorTrimmer();
+}
+
+async function startAndroidVideoEditorTrimmer() {
+  initVideoEditor();
+  return await VideoEditorModule.openVideoEditorTrimmer();
+}
+
 async function startAndroidVideoEditor() {
+  initVideoEditor();
   return await VideoEditorModule.openVideoEditor();
+}
+
+async function startAndroidVideoEditorPIP() {
+  initVideoEditor();
+  return await VideoEditorModule.openVideoEditorPIP();
 }
 
 export const AppRouting = () => {
@@ -87,7 +126,7 @@ export const AppRouting = () => {
   }, []);
 
   return (
-    <NavigationContainer theme={theme} linking={linking}>
+    <NavigationContainer theme={theme} linking={linking} fallback={<Text>Loading...</Text>}>
       <AuthorizedRoutes />
     </NavigationContainer>
   );
@@ -311,6 +350,11 @@ const AuthorizedRoutes = () => {
           ),
           headerTitleAlign: 'center'
         })}
+      />
+      <Stack.Screen
+        name={SCREEN_NAMES.Meeting}
+        component={Meeting}
+        options={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, headerShown: false }}
       />
     </Stack.Navigator>
   );

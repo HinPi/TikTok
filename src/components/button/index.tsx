@@ -1,25 +1,30 @@
-import { default as React } from 'react';
-import { StyleSheet } from 'react-native';
-import { Button } from 'react-native-paper';
-import { PRIMARY } from '../../styles/color';
-import { TYPOGRAPHY_STYLES } from '../../styles/typography';
+import React from 'react';
+import { Text, TouchableOpacity } from 'react-native';
 
-export type ButtonProps = React.ComponentProps<typeof Button>;
-
-export const DefaultButton = (props: ButtonProps): JSX.Element => {
-  const { disabled, children, color = PRIMARY, labelStyle, style, ...other } = props;
+const Button = ({ text, backgroundColor, onPress, style = {}, textStyle = {} }: any) => {
   return (
-    <Button
-      {...other}
-      disabled={disabled || other.loading}
-      color={color}
-      labelStyle={[TYPOGRAPHY_STYLES.Button, labelStyle]}
-      style={[styles.button, style]}
-      mode="contained"
+    <TouchableOpacity
+      onPress={onPress}
+      style={{
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: backgroundColor ? backgroundColor : '#5568FE',
+        borderRadius: 12,
+        marginVertical: 12,
+        ...style
+      }}
     >
-      {children}
-    </Button>
+      <Text
+        style={{
+          color: '#FFFFFF',
+          fontSize: 16,
+          ...textStyle
+        }}
+      >
+        {text}
+      </Text>
+    </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({ button: { borderRadius: 4, padding: 4 } });
+export default Button;
